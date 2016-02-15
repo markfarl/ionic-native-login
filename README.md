@@ -81,3 +81,4 @@ This comparison illustrates the difference mentioned above:
 
 
 ## To get this done, follow the step-by-step instructions available here: https://ionicthemes.com/learn/about/native-facebook-login-with-ionic-framework
+"# ionic-native-login" 
