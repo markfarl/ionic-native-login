@@ -1,0 +1,66 @@
+<ion-content class="front-page">
+  <div class="item item-text-wrap">
+    <section>
+      <section>
+        <h3>Information Sheet for Prospective Participants</h3>
+
+        <p class="left-align"><small>Thank you for your interest in taking part in this experiment. The information below is provided to inform your decision about consenting to take part in this experiment.</small></p>
+
+        <h5>Details of the experiment</h5>
+
+        <p class="left-align"><small>In this experiment you are asked to sign into your social profiles via the BigFoot application. Due to signing in directly through your social profiles no user id or password information will be visible to the BigFoot application. In a second stop you will be asked to approve the usage of your social information. After this your information will be visualized in the BigFoot application for you to gain insight on your social data. After this you will be asked to fill out a short online questionnaire. Finally, your social data usage and the questionnaire will allow us to calculate a digital footprint score, which will be shared with you. It allows you to understand and learn how to manage and control your social data. </small></p>
+
+        <small>Please <strong class="hilight">swipe up <i class="fa fa-arrow-up"></i></strong> to read more...</small>
+      </section>
+
+      <section>
+        <h4>Legal Notes</h4>
+
+        <ul style="font-size: 16px;">
+          <li>All recorded data will be stored anonymously and confidentially. Where used in academic publications all data will be aggregated and no personally identifiable information will be published. Any data used in publications will be aggregated and no personally identifiable information will be revealed.</li>
+          <li>Participation in this study is voluntary; you may withdraw from the study at any time and for any reason without penalty.</li>
+          <li>In the extremely unlikely event that illicit activity is reported I will be obliged to report it to appropriate authorities.</li>
+          <li>Please do not name third parties in any open text field of the questionnaire.  Any such replies will be anonymised.</li>
+          <li>While questions are not compulsory I would appreciate if you would answer them all.</li>
+        </ul>
+
+        <p class="left-align" style="margin-bottom: 0;"><small>The experiment will involve:</small></p>
+
+        <ul style="font-size: 16px; float: left;">
+          <li>Signing into the Bigfoot app with your social profiles.</li>
+          <li>Approving the usage of your social data for visualization purposes.</li>
+          <li>Completing a short questionnaire.</li>
+        </ul>
+
+        <br>
+
+        <p class="left-align"><small>The duration of the experiment is approximately 20 minutes. There are no conflicts of interest. Participants are recruited through transparent methods and will be selected randomly.</small></p>
+
+        <p class="left-align"><small>This study is being undertaken by researchers in the School of Computer Science and Statistic in Trinity College Dublin. If you would like further details about the study feel free to contact Dr. Kevin Koidl in Trinity College Dublin.</small></p>
+
+
+        <p align="center">
+          <strong>Do you agree with the terms and conditions of this experiment?</strong>
+         </p>
+      </section>
+    </section>
+
+
+  </div>
+
+
+  <ion-radio ng-model="termsAgreement" ng-value="'A'">I Agree</ion-radio>
+  <ion-radio ng-model="termsAgreement" ng-value="'B'">I do not Agree</ion-radio>
+
+  <button ng-model="terms.continueButton" ng-click="showLoginButton(termsAgreement)" class="button button-block button-positive">
+    Login to Facebook
+  </button>
+
+</ion-content>
+
+
+<ion-footer-bar>
+
+
+</ion-footer-bar>
+

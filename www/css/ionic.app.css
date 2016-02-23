@@ -2750,7 +2750,9 @@ ion-infinite-scroll {
   -webkit-transition-duration: 0;
   transition-duration: 0;
   z-index: 1; }
-
+.pane.white{
+  background: #fff;
+}
 .view {
   z-index: 1; }
 
@@ -2762,7 +2764,6 @@ ion-infinite-scroll {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #fff;
   overflow: hidden; }
 
 .view-container {
@@ -2770,7 +2771,10 @@ ion-infinite-scroll {
   display: block;
   width: 100%;
   height: 100%; }
-
+.terms-conditions.card{
+  max-height:60%;
+  overflow: scroll;
+}
 /**
  * Typography
  * --------------------------------------------------
@@ -7701,9 +7705,9 @@ a.button {
   transition-duration: 0s; }
 
 .welcome-view {
-  background-color: #FF7258; }
-  .welcome-view .top-content {
-    height: 66%; }
+  background-color: #0b4a99; }
+  .welcome-view .top-content { }
+
     .welcome-view .top-content .app-copy {
       text-align: center;
       padding-top: 13vh; }
@@ -7714,16 +7718,68 @@ a.button {
       color: #FFFFFF;
       letter-spacing: 8px;
       text-transform: uppercase; }
+    .app-logo img{
+      width:60%;
+      height:auto;
+    }
     .welcome-view .top-content .app-tagline {
       font-size: 16px;
       margin-top: 0px;
       font-weight: 500;
       color: rgba(255, 255, 255, 0.95); }
   .welcome-view .bottom-content {
-    height: 34%; }
+    height: 34%;
+    color: rgba(255, 255, 255, 0.95);
+  }
     .welcome-view .bottom-content .facebook-sign-in {
       border-radius: 4px;
       font-weight: 500;
       color: #FFF;
-      background-color: #294886;
+      background-color: #437BD0;
       border-color: #27447e; }
+    img.header-logo{
+      height:70%;
+      margin-top: 6px;
+    }
+div.bottom-bar{
+  position: absolute;
+  bottom: 0px;
+  height:65px;
+  width:100%;
+  background: #0b4a99;
+}
+div.top-bar-locked{
+  position:absolute;
+  top:0px;
+  height: 130px;
+  width:100%;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  background: #0b4a99;
+  z-index: 1000;
+  border-bottom: 2px solid #0c60ee;
+}
+.top-bar-locked img{
+  height:50px;
+  margin:18px 0px;
+}
+.front-page{
+  padding-top: 130px;
+  background: #fff;
+}
+.front-page.blue-plane{
+  background: #0b4a99;
+  padding-top: 120px;
+}
+img.profile-picture{
+  float: right;
+  width: 80px;
+  height: 80px;
+  margin-top: 20px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+.form-group{
+  margin-bottom: 10px;
+}

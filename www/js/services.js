@@ -16,4 +16,21 @@ angular.module('services', [])
     getUser: getUser,
     setUser: setUser
   };
+})
+.factory('Account', function($http, serverUrl) {
+  return {
+    getProfile: function() {
+      return $http.get(serverUrl+'/api/me');
+    },
+    updateProfile: function(profileData) {
+      return $http.put(serverUrl+'/api/me', profileData);
+    }
+  };
+})
+.factory('stateService', function($state) {
+  return {
+    goState: function (path) {
+      $state.go(path);
+    }
+  };
 });

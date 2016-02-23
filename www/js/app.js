@@ -3,9 +3,11 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'controllers', 'services'])
+angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js'])
 
-.run(function($ionicPlatform) {
+.constant('serverUrl', 'http://46.22.136.60:80')
+
+.run(function($ionicPlatform, $rootScope, stateService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -16,16 +18,52 @@ angular.module('starter', ['ionic', 'controllers', 'services'])
       StatusBar.styleDefault();
     }
   });
+
+//Globbally puts the change state service as function use ng-click="appData.goState(path)"
+  $rootScope.appData = stateService;
 })
+
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
   .state('welcome', {
     url: '/welcome',
-    templateUrl: "views/welcome.html",
+    abstract: true,
+    templateUrl: "views/start.html",
     controller: 'WelcomeCtrl'
+
   })
+
+    .state('welcome.terms', {
+      url: "/terms",
+      views: {
+        'welcomeContent': {
+          templateUrl: "views/terms.html",
+
+        }
+      }
+    })
+    .state('welcome.consent', {
+      url: "/consent",
+      views: {
+        'welcomeContent': {
+          templateUrl: "views/consent.html",
+          controller: 'WelcomeCtrl'
+        }
+      }
+    })
+
+    .state('welcome.login', {
+      url: "/login",
+      views: {
+        'welcomeContent': {
+          templateUrl: "views/login.html",
+          controller: 'WelcomeCtrl'
+        }
+      }
+    })
+
 
   .state('app', {
     url: "/app",
@@ -44,8 +82,20 @@ angular.module('starter', ['ionic', 'controllers', 'services'])
     }
   })
 
+    .state('app.stats', {
+      url: "/stats",
+      views: {
+        'menuContent': {
+          templateUrl: "views/stats.html",
+          controller: 'StatsCtrl'
+        }
+      }
+    })
+
   ;
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/welcome');
+  $urlRouterProvider.otherwise('/welcome/terms');
 })
+
+;

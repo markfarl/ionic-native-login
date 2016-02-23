@@ -1,0 +1,49 @@
+<ion-view class="home-view">
+  <ion-nav-title>
+  Stats
+  </ion-nav-title>
+  <ion-content class="white">
+    <div class="row">
+      <div class="col">
+
+
+        <div class="card">
+          <div class="item item-divider">
+            {{chartTitle}}
+          </div>
+          <div class="item item-text-wrap">
+            <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-series="series">
+            </canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="item item-divider">
+            Categories you like
+          </div>
+          <div class="item item-text-wrap">
+            <canvas id="cat-bar" class="chart chart-bar" chart-data="catData" chart-labels="catLabels" chart-series="series">
+            </canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="item item-divider">
+            Musical Taste
+          </div>
+          <div class="item item-text-wrap">
+            <canvas id="music-bar" class="chart chart-bar" chart-data="catData" chart-labels="catLabels" chart-series="series">
+            </canvas>
+          </div>
+        </div>
+
+
+        <a class="button button-positive button-block " ng-click="showLogOutMenu()">
+          Continue
+        </a>
+      </div>
+    </div>
+
+
+  </ion-content>
+</ion-view>
