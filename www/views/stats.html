@@ -1,6 +1,6 @@
 <ion-view class="home-view">
   <ion-nav-title>
-  Stats
+    <strong>BigFoot</strong> | Activity Analysis
   </ion-nav-title>
   <ion-content class="white">
     <div class="row">
@@ -9,10 +9,10 @@
 
         <div class="card">
           <div class="item item-divider">
-            {{chartTitle}}
+            Facebook Likes
           </div>
           <div class="item item-text-wrap">
-            <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-series="series">
+            <canvas id="fb-likes" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-options="{showTooltips: false}">
             </canvas>
           </div>
         </div>
@@ -22,8 +22,11 @@
             Categories you like
           </div>
           <div class="item item-text-wrap">
-            <canvas id="cat-bar" class="chart chart-bar" chart-data="catData" chart-labels="catLabels" chart-series="series">
-            </canvas>
+            <ion-list>
+              <ion-item ng-repeat="item in catitems">
+                {{item.cat}} : {{item.count}} likes
+              </ion-item>
+            </ion-list>
           </div>
         </div>
 
@@ -32,13 +35,16 @@
             Musical Taste
           </div>
           <div class="item item-text-wrap">
-            <canvas id="music-bar" class="chart chart-bar" chart-data="catData" chart-labels="catLabels" chart-series="series">
-            </canvas>
+            <ion-list>
+              <ion-item ng-repeat="genre in genreObj">
+                {{genre.genre}} : {{genre.value}} likes
+              </ion-item>
+            </ion-list>
           </div>
         </div>
 
 
-        <a class="button button-positive button-block " ng-click="showLogOutMenu()">
+        <a class="button button-positive button-block " ng-click="sendlikestoProfile()">
           Continue
         </a>
       </div>

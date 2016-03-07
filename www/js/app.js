@@ -6,6 +6,7 @@
 angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js'])
 
 .constant('serverUrl', 'http://46.22.136.60:80')
+.constant('totalScore' , '')
 
 .run(function($ionicPlatform, $rootScope, stateService) {
   $ionicPlatform.ready(function() {
@@ -64,7 +65,6 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js'])
       }
     })
 
-
   .state('app', {
     url: "/app",
     abstract: true,
@@ -91,8 +91,33 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js'])
         }
       }
     })
-
-  ;
+    .state('app.msganalysis', {
+      url: "/msganalysis",
+      views: {
+        'menuContent': {
+          templateUrl: "views/messageAnalysis.html",
+          controller: 'AnalysisCtrl'
+        }
+      }
+    })
+    .state('app.questions', {
+      url: "/questions",
+      views: {
+        'menuContent': {
+          templateUrl: "views/questions.html",
+          controller: 'QuestionsCtrl'
+        }
+      }
+    })
+    .state('app.results', {
+      url: "/results",
+      views: {
+        'menuContent': {
+          templateUrl: "views/results.html",
+          controller: 'ResultsCtrl'
+        }
+      }
+    });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/welcome/terms');

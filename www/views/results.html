@@ -1,0 +1,29 @@
+<ion-view class="home-view">
+  <ion-nav-title>
+    <strong>BigFoot</strong> | Your Results
+  </ion-nav-title>
+  <ion-content class="white">
+    <div class="row">
+      <div class="col">
+
+
+        <div class="card">
+          <div class="item item-divider">
+            Your Privacy Score is
+          </div>
+          <div class="item item-text-wrap">
+            <h1>{{privacyScore}}</h1>
+          </div>
+        </div>
+
+        <button ng-click="changeState('welcome.terms')" class="button button-block button-positive">
+          Start Again
+        </button>
+
+
+      </div>
+    </div>
+
+
+  </ion-content>
+</ion-view>

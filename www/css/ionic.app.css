@@ -3100,7 +3100,7 @@ a.subdued {
       background-image: linear-gradient(180deg, #b2b2b2, #b2b2b2 50%, transparent 50%); }
   .bar.bar-positive {
     border-color: #0c60ee;
-    background-color: #387ef5;
+    background-color: #119;
     background-image: linear-gradient(0deg, #0c60ee, #0c60ee 50%, transparent 50%);
     color: #fff; }
     .bar.bar-positive .title {
@@ -6657,15 +6657,15 @@ progress {
         box-shadow: none;
         color: #fff; }
   .button.button-positive {
-    border-color: #0c60ee;
-    background-color: #387ef5;
+    border-color: #ddd;
+    background-color: #119;
     color: #fff; }
     .button.button-positive:hover {
       color: #fff;
       text-decoration: none; }
     .button.button-positive.active, .button.button-positive.activated {
-      border-color: #0c60ee;
-      background-color: #0c60ee;
+      border-color: #009;
+      background-color: #009;
       box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); }
     .button.button-positive.button-clear {
       border-color: transparent;
@@ -7756,30 +7756,61 @@ div.top-bar-locked{
   text-align: center;
   color: #fff;
   font-size: 18px;
-  background: #0b4a99;
+  background: #119;
   z-index: 1000;
-  border-bottom: 2px solid #0c60ee;
+  border-bottom: 2px solid #ddd;
 }
 .top-bar-locked img{
   height:50px;
   margin:18px 0px;
 }
 .front-page{
-  padding-top: 130px;
+  top: 65px;
+  padding-top: 65px;
   background: #fff;
 }
 .front-page.blue-plane{
-  background: #0b4a99;
-  padding-top: 120px;
+  background: #119;
 }
 img.profile-picture{
   float: right;
   width: 80px;
   height: 80px;
-  margin-top: 20px;
+  margin-top: 5px;
   border-radius: 50%;
   margin-bottom: 20px;
 }
+h3{
+  margin-top: 5px;
+}
 .form-group{
   margin-bottom: 10px;
+}
+section.terms{
+  color: #fff;
+}
+section.terms h1{
+  font-size:26px;
+}
+section.terms h2{
+  font-size:22px;
+}
+section.terms h2, section.terms h1{
+  margin: 15px 0px 10px 0px;
+  color: #fff;
+}
+section.terms p{
+  margin: 10px 0px;
+}
+section.terms ul{
+  font-size:14px;
+}
+.questions .form-group{
+  margin-bottom: 20px;
+}
+ion-content.questions .input-label{
+  height:35px;
+}
+ion-nav-title strong{
+  color: #ffa500;
 }

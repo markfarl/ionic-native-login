@@ -1,0 +1,36 @@
+<ion-view class="home-view">
+  <ion-nav-title>
+    <strong>BigFoot</strong> | Activity Sentiments
+  </ion-nav-title>
+  <ion-content class="white">
+    <div class="row">
+      <div class="col">
+
+
+        <div class="card">
+          <div class="item item-divider">
+            Your Sentiment: {{sentimentOut}}% positive
+          </div>
+          <div class="item item-text-wrap">
+            <canvas class="chart chart-doughnut" chart-data="cdata" chart-labels="clabels" chart-options="{showTooltips: false}">
+            </canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="item item-divider">
+            Your Subjectivity: {{subOut}}%
+          </div>
+          <div class="item item-text-wrap">
+            <canvas class="chart chart-doughnut" chart-data="sdata" chart-labels="slabels" chart-options="{showTooltips: false}">
+            </canvas>
+          </div>
+        </div>
+        <a class="button button-positive button-block " ng-click="changeState('app.questions')">
+          Continue
+        </a>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

@@ -1,0 +1,206 @@
+<ion-view class="home-view">
+  <ion-nav-title>
+    <strong>BigFoot</strong> | Usage Chart
+  </ion-nav-title>
+  <ion-content class="white questions">
+    <div class="row">
+      <div class="col">
+
+
+
+
+        <div class="form-group" ng-repeat="question in questionmaster">
+          <p>{{question.title}}</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select ng-model="answers[question.model]" ng-options="name for (name, value) in question.items">
+            </select>
+          </label>
+        </div>
+
+
+        <a class="button button-positive button-block " ng-click="sendQuestionstoProfile()">
+          Save &amp; Continue
+        </a>
+
+
+
+       <!-- <div class="form-group">
+            <p>The BigFoot application has made me more aware of my Social Media behavior.</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select ng-model="questions.question1">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <p>How often do you share private information, such as photos of friends and family on Social Media sites?</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-2" ng-model="questions.question2">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+
+
+        <div class="form-group">
+          <p>How often do you review and manage your privacy settings of your Social Media accounts?</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-4" ng-model="questions.question4">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>How often do you use your Social Media credentials to sign into third-party applications?</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-5" ng-model="questions.question5">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>When using my Social Media credentials to sign into other applications, I don't pay attention to what information the third-party app gets access to.</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-6" ng-model="questions.question6">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>How many third-party app connections do you think you have?</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-7" ng-model="questions.question7">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>I am not concerned about what happens with my Social Media data.</p>
+          <label class="item item-input item-select item-stable">
+            <select id="usage-8" ng-model="questions.question8">
+              <option value="5">Strongly Disagree</option>
+              <option value="4">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="2">Agree</option>
+              <option value="1">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>I always read and understand the Terms and Conditions when registering for a Social Media website.</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-9" ng-model="questions.question9">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>I don't mind that most Social Media sites use my data to sell advertisement.</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-10" ng-model="questions.question10">
+              <option value="5">Strongly Disagree</option>
+              <option value="4">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="2">Agree</option>
+              <option value="1">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>I would rather pay Social Media sites a subscription fee in exchange for controlling what happens with my data.</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-11" ng-model="questions.question11">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>I would like to be able to sell my Social Media data to private organizations such as Advertising and Marketing agencies.</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-12" ng-model="questions.question12">
+              <option value="1">Strongly Disagree</option>
+              <option value="2">Disagree</option>
+              <option ng-selected="true" value="3">Neutral</option>
+              <option value="4">Agree</option>
+              <option value="5">Strongly Agree</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <p>For what price would you sell all your Social Media data?</p>
+          <label class="item item-input item-select item-stable">
+            <div class="input-label">
+            </div>
+            <select id="usage-13" ng-model="questions.question13">
+              <option ng-selected="true" value="5">I would not sell</option>
+              <option value="4">No more than 10 EURO</option>
+              <option value="3">No more than 100 EURO</option>
+              <option value="2">No more than 500 EURO</option>
+              <option value="1">More than 500 EURO</option>
+            </select>
+          </label>
+        </div>
+-->
+
+
+      </div>
+    </div>
+
+
+  </ion-content>
+</ion-view>

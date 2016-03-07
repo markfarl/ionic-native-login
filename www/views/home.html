@@ -1,6 +1,6 @@
 <ion-view class="home-view">
   <ion-nav-title>
-    Your Demographics
+    <strong>BigFoot</strong> | Your Demographics
   </ion-nav-title>
   <ion-content class="white">
     <div class="row">
@@ -26,6 +26,7 @@
               Your age range
             </div>
             <select ng-model="user.ageRange">
+              <option value="">Please Select Option</option>
               <option value="1">17 or younger</option>
               <option value="2">18-20</option>
               <option value="3">21-29</option>
@@ -42,6 +43,7 @@
               Gender
             </div>
             <select ng-model="user.gender">
+              <option value="">Please Select Option</option>
               <option value="1">Male</option>
               <option value="2">Female</option>
             </select>
@@ -53,6 +55,7 @@
             Country
           </div>
           <select ng-model="user.country">
+            <option value="">Please Select Option</option>
             <option value="IE">Ireland</option>
             <option value="AF">Afghanistan</option>
             <option value="AX">Åland Islands</option>
@@ -307,6 +310,7 @@
               Education
             </div>
             <select ng-model="user.education">
+              <option value="">Please Select Option</option>
               <option value="1">Less than Primary School</option>
               <option value="2">Primary School degree or equivalent</option>
               <option value="3">Secondary School</option>
