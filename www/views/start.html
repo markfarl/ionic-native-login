@@ -1,10 +1,155 @@
 <ion-view class="welcome-view">
-  <div class="top-bar-locked">
-    <img class="logo" src="img/head_logo.png">
-    <p>Track your Digital Footprint</p>
-  </div>
-  <ion-nav-view name="welcomeContent">
+  <button id="fab-profile" ng-click="scrolltoBottom()" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-arrow-down-b"></i></button>
+  <ion-header-bar class="bar-positive bar-header start-page">
+     <div class="disapearItems">
+        <div class="cover">
+        </div>
+        <p>Track your Digital Footprint</p>
+     </div>
+  </ion-header-bar>
 
-  </ion-nav-view>
+  <img class="logo" src="img/head_logo.png">
+
+  <ion-content header-shrink scroll-event-interval="10" class="front-page">
+    <div class="row">
+      <div class="col">
+        <section class="terms">
+          <section>
+              <h1>Information Sheet for Prospective Participants</h1>
+
+              <p>Thank you for your interest in taking part in this experiment. The information below is provided to inform your decision about consenting to take part in this experiment.</p>
+
+              <h2>Details of the experiment</h2>
+
+              <p>In this experiment you are asked to sign into your social profiles via the BigFoot application. Due to signing in directly through your social profiles no user id or password information will be visible to the BigFoot application. In a second stop you will be asked to approve the usage of your social information. After this your information will be visualized in the BigFoot application for you to gain insight on your social data. After this you will be asked to fill out a short online questionnaire. Finally, your social data usage and the questionnaire will allow us to calculate a digital footprint score, which will be shared with you. It allows you to understand and learn how to manage and control your social data.</p>
+          </section>
+
+       <section>
+           <h2>Legal Notes</h2>
+
+            <ul>
+              <li>All recorded data will be stored anonymously and confidentially. Where used in academic publications all data will be aggregated and no personally identifiable information will be published. Any data used in publications will be aggregated and no personally identifiable information will be revealed.</li>
+              <li>Participation in this study is voluntary; you may withdraw from the study at any time and for any reason without penalty.</li>
+              <li>In the extremely unlikely event that illicit activity is reported I will be obliged to report it to appropriate authorities.</li>
+              <li>Please do not name third parties in any open text field of the questionnaire.  Any such replies will be anonymised.</li>
+              <li>While questions are not compulsory I would appreciate if you would answer them all.</li>
+            </ul>
+
+            <p>The experiment will involve:</p>
+
+            <ul>
+              <li>Signing into the Bigfoot app with your social profiles.</li>
+              <li>Approving the usage of your social data for visualization purposes.</li>
+              <li>Completing a short questionnaire.</li>
+            </ul>
+
+            <br>
+
+            <p>The duration of the experiment is approximately 20 minutes. There are no conflicts of interest. Participants are recruited through transparent methods and will be selected randomly.</p>
+
+            <p>This study is being undertaken by researchers in the School of Computer Science and Statistic in Trinity College Dublin. If you would like further details about the study feel free to contact Dr. Kevin Koidl in Trinity College Dublin.</p>
+
+          </section>
+            <section>
+              <h1>Informed Consent Form</h1>
+              <p><strong>LEAD RESEARCHERS:</strong> Dr. Kevin Koidl</p>
+
+              <p><strong>BACKGROUND OF RESEARCH:</strong>  The goal of this experiment is to allow you to gain insight into your social data. This will be done by visualizing your social information in widgets. Your participation will increase both your understanding and the understanding of research in how useful social media is to understand oneself and the context we are living in.</p>
+
+              <h2>Procedures of this Study:</h2>
+
+              <p>In a first step you will be asked to sign into the BigFoot application via your social profiles. This ensures that the Bigfoot application will not receive any login information. In a second step you will have to approve what information BigFoot is allowed to use. After this you will be able to view your data in state of the art visualisation widgets with the goal to increase insight  into your data.  The BigFoot application In a second step you will be asked to complete a short questionnaire. Together with your social data a digital footprint score will be calculated. This footprint will be visualized back to you with the goal to give you understanding on what is happening with your data and how you can control it more.</p>
+
+            </section>
+
+            <section>
+              <p>The BigFoot application will receive the following info from your social profiles: your public profile, friend list, email address, custom friends lists, News Feed, relationships, birthday, status updates, checkins, education history, hometown, current city, photos, religious and political views, videos and likes and your friends' relationships, birthdays, education histories, hometowns, current cities, photos, religious and political views and videos.</p>
+
+              <p>In order to do analysis your social data, it is necessary to cache it temporarily on our servers. We acquire the data through social media interfaces (APIs). The interfaces provided by the social media platforms respect whatever privacy settings you and your friends have given to your social media sites. BigFoot is set up to cache your data on our servers for one hour, which allows you to perform queries efficiently. The default behavior is to delete personally identifiable data after one hour. </p>
+
+              <p><strong>We aggregated statistical analysis and further research we store  your data anonomized, however we don’t store any of the following without your explicit consent to do so:</strong></p>
+
+              <div>
+                <ul>
+                  <li>Your name</li>
+                  <li>Your religion</li>
+                  <li>Your political affiliations</li>
+                  <li>Your occupation and employer</li>
+                  <li>Your telephone and/or fax number</li>
+                  <li>Your URLs</li>
+                </ul>
+              </div>
+              <div>
+                <ul>
+                  <li>Your IP address</li>
+                  <li>Your geographic location (except your country of residence)</li>
+                  <li>Any social security numbers</li>
+                  <li>Any dates (except for years) (birth, graduation, etc.)</li>
+                  <li>Any uploaded images</li>
+                  <li>Any other personally identifiable numbers, characteristics, or codes</li>
+                </ul>
+              </div>
+
+            </section>
+
+            <section>
+              <h2>Declaration</h2>
+
+              <div>
+                <ul>
+                  <li><strong>I am 18 years or older and am competent to provide consent.</strong></li>
+                  <li><strong>If I am bellow 18 a responsible parent has to sign this sheet for me and stay with me for the duration of the experiment.</strong></li>
+                  <li>I have read, or had read to me, a document providing information about this research and this consent form. I have had the opportunity to ask questions and all my questions have been answered to my satisfaction and understand the description of the research that is being provided to me.</li>
+                  <li>I agree that my data is used for scientific purposes and I have no objection that my data is published in scientific publications in a way that does not reveal my identity.</li>
+                  <li>I understand that if I make illicit activities known, these will be reported to appropriate authorities.</li>
+                  <li>I have received a copy of this agreement.</li>
+                </ul>
+              </div>
+
+              <div>
+                <ul>
+                  <li>I understand that I may stop electronic recordings at any time, and that I may at any time, even subsequent to my participation have such recordings destroyed (except in situations such as above).</li>
+                  <li>I understand that, subject to the constraints above, no recordings will be replayed in any public forum or made available to any audience other than the current researchers/research team.</li>
+                  <li>I freely and voluntarily agree to be part of this research study, though without prejudice to my legal and ethical rights.</li>
+                  <li>I understand that I may refuse to answer any question and that I may withdraw at any time without penalty.</li>
+                  <li>I understand that my participation is fully anonymous and that no personal details about me will be recorded.</li>
+                  <li>I understand that if I or anyone in my family has a history of epilepsy then I am proceeding at my own risk.</li>
+                </ul>
+              </div>
+
+              <h2>Publication</h2>
+              <p>Individual results may be aggregated anonymously and research reported on aggregate results.</p>
+
+
+            </section>
+
+            <section>
+
+              <p><strong>Statement of investigator’s responsibility:</strong> I have explained the nature and purpose of this research study, the procedures to be undertaken and any risks that may be involved. I have offered to answer any questions and fully answered such questions. I believe that the participant understands my explanation and has freely given informed consent.</p>
+
+            </section>
+          <div class="card">
+            <div class="item item-text-wrap">
+              <strong>Have you read and agree with the terms and conditions of this experiment?</strong>
+            </div>
+            <ion-radio ng-model="termsAgreement" ng-value="'A'">I Agree</ion-radio>
+            <ion-radio ng-model="termsAgreement" ng-value="'B'">I do not Agree</ion-radio>
+
+            <button ng-model="terms.continueButton" ng-click="showLoginButton(termsAgreement)" class="button fblogin button-block button-positive">
+              <i class="icon ion-social-facebook"></i> Login with Facebook
+            </button>
+          </div>
+        </section>
+
+
+
+      </div>
+
+    </div>
+
+
+  </ion-content>
+
+
 
 </ion-view>

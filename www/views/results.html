@@ -12,11 +12,14 @@
             Your Privacy Score is
           </div>
           <div class="item item-text-wrap">
+            <img class="results" src="img/{{scoreimage}}">
             <h1>{{privacyScore}}</h1>
+            <h2>{{scoreTitle}}</h2>
+            <p>{{scoreText}}</p>
           </div>
         </div>
 
-        <button ng-click="changeState('welcome.terms')" class="button button-block button-positive">
+        <button ng-click="LogOutProcess()" class="button button-block button-positive">
           Start Again
         </button>
 

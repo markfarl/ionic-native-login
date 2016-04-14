@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.bigfoot.bigfoot" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.bigfoot.bigfoot" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Bigfoot</name>
   <description>
-    Bigfoot expand your social media mind man
+    Bigfoot expand your social media mind
   </description>
   <author email="info@ionicthemes.com" href="https://ionicthemes.com/">
     IonicThemes

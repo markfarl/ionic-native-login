@@ -1,19 +1,49 @@
 <ion-view class="home-view">
   <ion-nav-title>
-    <strong>BigFoot</strong> | Activity Analysis
+    <strong>Your Activity</strong>
   </ion-nav-title>
-  <ion-content class="white">
-    <div class="row">
+    <div class="tabs tabs-positive tabs-icon-top tabs-sub-header">
+    <a ui-sref="app.stats" ui-sref-active="active" class="tab-item">
+      <i class="icon ion-thumbsup"></i> By Likes
+    </a>
+    <a ui-sref="app.friends" ui-sref-active="active" class="tab-item">
+      <i class="icon ion-chatboxes"></i> By Comments
+    </a>
+    <a ui-sref="app.gallery" ui-sref-active="active" class="tab-item">
+      <i class="icon ion-android-share-alt"></i> By Shares
+    </a>
+  </div>
+
+  <ion-content scroll-watch="88" scroll-event-interval="10" class="white statistics-page">
+
+    <div class="list">
+      <div class="item item-divider">
+        Your most popular post by: <strong>Likes</strong>
+      </div>
+
+
+      <div ng-repeat="item in catitems" class="item item-avatar stats-item item-icon-right">
+        <span class="avatar"><i class="icon">{{$index+1}}</i></span>
+        <h2>{{item.cat}}...</h2>
+        <p><strong>Subject:</strong> {{item.cat}}</p>
+        <i class="icon ion-thumbsup muted">{{item.count}}</i>
+      </div>
+
+
+
+    </div>
+  <!--  <div class="row">
       <div class="col">
 
 
         <div class="card">
-          <div class="item item-divider">
-            Facebook Likes
-          </div>
+
           <div class="item item-text-wrap">
-            <canvas id="fb-likes" class="chart chart-bar" chart-data="data" chart-labels="labels" chart-options="{showTooltips: false}">
-            </canvas>
+            <ion-list>
+              <ion-item >
+                 :  likes
+              </ion-item>
+            </ion-list>
           </div>
         </div>
 
@@ -30,26 +60,13 @@
           </div>
         </div>
 
-        <div class="card">
-          <div class="item item-divider">
-            Musical Taste
-          </div>
-          <div class="item item-text-wrap">
-            <ion-list>
-              <ion-item ng-repeat="genre in genreObj">
-                {{genre.genre}} : {{genre.value}} likes
-              </ion-item>
-            </ion-list>
-          </div>
-        </div>
-
 
         <a class="button button-positive button-block " ng-click="sendlikestoProfile()">
           Continue
         </a>
       </div>
     </div>
-
+-->
 
   </ion-content>
 </ion-view>

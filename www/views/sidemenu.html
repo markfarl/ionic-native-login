@@ -1,6 +1,6 @@
 <ion-side-menus enable-menu-with-back-views="true">
   <ion-side-menu-content class="white">
-    <ion-nav-bar class="bar-positive">
+    <ion-nav-bar class="bar-positive no-shadow">
       <ion-nav-back-button>
       </ion-nav-back-button>
       <ion-nav-buttons side="right">
@@ -17,16 +17,16 @@
         <ion-item menu-close ng-click="changeState('app.home')">
           Profile
         </ion-item>
-        <ion-item menu-close ng-click="changeState('app.stats')">
+        <ion-item ng-hide="pageViewed.stats == 0" menu-close ng-click="changeState('app.stats')">
           Social Media Statistics
         </ion-item>
-        <ion-item menu-close ng-click="changeState('app.msganalysis')">
+        <ion-item ng-hide="pageViewed.messageAnal == 0" menu-close ng-click="changeState('app.msganalysis')">
           Privacy Analysis
         </ion-item>
-        <ion-item menu-close ng-click="changeState('app.questions')">
+        <ion-item ng-hide="pageViewed.messageAnal == 0" menu-close ng-click="changeState('app.questions')">
           Your Usage
         </ion-item>
-        <ion-item menu-close ng-click="changeState('app.results')">
+        <ion-item ng-hide="pageViewed.questions == 0" menu-close ng-click="changeState('app.results')">
           Results
         </ion-item>
         <ion-item menu-close ng-click="showLogOutMenu()">

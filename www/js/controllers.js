@@ -1,13 +1,12 @@
 angular.module('controllers', [])
 
-.controller('WelcomeCtrl', function($ionicPopup, $scope, $http, $state, $q, UserService, $ionicLoading, serverUrl) {
+.controller('WelcomeCtrl', function($ionicPopup, $scope, $http, $state, $q, UserService, $ionicLoading, serverUrl, $ionicScrollDelegate) {
 
   //Onpage Load clear auth Header as user will be considered logged out if on this page
   $http.defaults.headers.common['Authorization'] = '';
 
 
   $scope.changeState = function(state){
-    console.log(state);
     $state.go(state);
   };
 
@@ -22,6 +21,10 @@ angular.module('controllers', [])
       facebookSignIn();
     }
 
+  };
+
+  $scope.scrolltoBottom = function(){
+    $ionicScrollDelegate.scrollBottom(true);
   };
 
   $scope.showContButton = function(i){
@@ -45,8 +48,6 @@ angular.module('controllers', [])
     }
 
 
-
-    console.log(response);
     var authResponse = response.authResponse;
 
     getFacebookProfileInfo(authResponse)
@@ -110,7 +111,7 @@ angular.module('controllers', [])
         console.log('Auth Header set');
         //Now go to home page
         $ionicLoading.hide();
-        $state.go('app.home');
+        $state.go('app.home.mydetails');
       })
       .error(function(data, status) {
         console.error(' error', status, data);
@@ -179,13 +180,144 @@ angular.module('controllers', [])
 
 
 
-  .controller('AppCtrl', function($scope, $state, $ionicPopup, $ionicLoading){
+  .controller('AppCtrl', function($scope, $ionicScrollDelegate, $rootScope, $state, $timeout, $ionicHistory, $window, pageViewed, $ionicPopup, $ionicLoading){
+
+    //Material Design Functions
+    // Form data for the login modal
+    $scope.loginData = {};
+    $scope.isExpanded = false;
+    $scope.hasHeaderFabLeft = false;
+    $scope.hasHeaderFabRight = false;
+
+    //These values are for hideing navheader and moving subheaer, used by directive scroll-watch
+    $rootScope.slideHeader = false;
+    $rootScope.slideHeaderPrevious = 0;
+
+
+    //Url here is gotten from ng-click
+    $scope.changeStateUrl = function(stateUrl){
+      console.log('balls'+stateUrl);
+      $scope.ngIncludeUrl = 'views/'+stateUrl+'.html';
+      $ionicScrollDelegate.resize();
+      $ionicScrollDelegate.scrollTop();
+
+    };
+    //Url is set also in app.js
+    if (typeof $state.current.views.dashboardContent != "undefined") {
+      $scope.ngIncludeUrl = $state.current.views.dashboardContent.templateUrl;
+    }
+
+
+
+
+    /*var navIcons = document.getElementsByClassName('ion-navicon');
+
+    for (var i = 0; i < navIcons.length; i++) {
+      navIcons.addEventListener('click', function() {
+        this.classList.toggle('active');
+      });
+    }*/
+
+    ////////////////////////////////////////
+    // Layout Methods
+    ////////////////////////////////////////
+
+    $scope.hideNavBar = function() {
+      document.getElementsByTagName('ion-nav-bar')[0].style.display = 'none';
+    };
+
+    $scope.showNavBar = function() {
+      document.getElementsByTagName('ion-nav-bar')[0].style.display = 'block';
+    };
+
+    $scope.noHeader = function() {
+      var content = document.getElementsByTagName('ion-content');
+      for (var i = 0; i < content.length; i++) {
+        if (content[i].classList.contains('has-header')) {
+          content[i].classList.toggle('has-header');
+        }
+      }
+    };
+
+    $scope.setExpanded = function(bool) {
+      $scope.isExpanded = bool;
+    };
+
+    $scope.setHeaderFab = function(location) {
+      var hasHeaderFabLeft = false;
+      var hasHeaderFabRight = false;
+
+      switch (location) {
+        case 'left':
+          hasHeaderFabLeft = true;
+          break;
+        case 'right':
+          hasHeaderFabRight = true;
+          break;
+      }
+
+      $scope.hasHeaderFabLeft = hasHeaderFabLeft;
+      $scope.hasHeaderFabRight = hasHeaderFabRight;
+    };
+
+    $scope.hasHeader = function() {
+      var content = document.getElementsByTagName('ion-content');
+      for (var i = 0; i < content.length; i++) {
+        if (!content[i].classList.contains('has-header')) {
+          content[i].classList.toggle('has-header');
+        }
+      }
+
+    };
+
+    $scope.hideHeader = function() {
+      $scope.hideNavBar();
+      $scope.noHeader();
+    };
+
+    $scope.showHeader = function() {
+      $scope.showNavBar();
+      $scope.hasHeader();
+    };
+
+    $scope.clearFabs = function() {
+      var fabs = document.getElementsByClassName('button-fab');
+      if (fabs.length && fabs.length > 1) {
+        fabs[0].remove();
+      }
+    };
+    //End of Material Design Functions
+
+    $scope.pageViewed = pageViewed;
 
     $scope.changeState = function(state){
       console.log(state);
       $state.go(state);
     };
 
+    var logOutProcess = function(){
+      pageViewed.stats = 0;
+      pageViewed.messageAnal = 0;
+      pageViewed.questions = 0;
+      $timeout(function () {
+        $window.localStorage.clear();
+        $ionicHistory.clearCache();
+        $ionicHistory.clearHistory();
+        $ionicLoading.hide();
+        $state.go('welcome.terms');
+      },300);
+    };
+
+    $scope.LogOutProcess = logOutProcess;
+
+    $scope.showInformationPopup = function(){
+      var alertPopup = $ionicPopup.alert({
+        title: 'Information',
+        template: 'Each question is optional. Feel free to omit a response to any question; however the researcher would be grateful if all questions are responded to.'
+      });
+
+
+    };
     $scope.showLogOutMenu = function() {
 
       var confirmPopup = $ionicPopup.confirm({
@@ -202,10 +334,7 @@ angular.module('controllers', [])
           });
 
           //facebook logout
-          facebookConnectPlugin.logout(function(){
-              $ionicLoading.hide();
-              $state.go('welcome.terms');
-            },
+          facebookConnectPlugin.logout(logOutProcess,
             function(fail){
               $ionicLoading.hide();
             });
@@ -216,10 +345,10 @@ angular.module('controllers', [])
 
 
   })
-  .controller('QuestionsCtrl', function($scope, Account, $http, $q, UserService, $ionicLoading, $ionicPlatform, $state){
+  .controller('QuestionsCtrl', function($scope, Account, $http, $q, pageViewed, UserService, $ionicLoading, $ionicPlatform, $state){
     //Question Object
     $scope.answers = {};
-
+    console.log(pageViewed);
     $ionicLoading.show({
       template: 'retrieving user data...'
     });
@@ -311,6 +440,50 @@ angular.module('controllers', [])
           'Neutral': 3,
           'Agree': 2,
           'Strongly Agree': 1
+        }
+        },
+      {
+        title: "I don't mind that most Social Media sites use my data to sell advertisement.",
+        model: 'question9',
+        items: {
+          'Strongly Disagree': 1,
+          'Disagree': 2,
+          'Neutral': 3,
+          'Agree': 4,
+          'Strongly Agree': 5
+        }
+        },
+      {
+        title: 'I would rather pay Social Media sites a subscription fee in exchange for controlling what happens with my data.',
+        model: 'question10',
+        items: {
+          'Strongly Disagree': 5,
+          'Disagree': 4,
+          'Neutral': 3,
+          'Agree': 2,
+          'Strongly Agree': 1
+        }
+        },
+      {
+        title: 'I would like to be able to sell my Social Media data to private organizations such as Advertising and Marketing agencies.',
+        model: 'question11',
+        items: {
+          'Strongly Disagree': 1,
+          'Disagree': 2,
+          'Neutral': 3,
+          'Agree': 4,
+          'Strongly Agree': 5
+        }
+        },
+      {
+        title: 'For what price would you sell all your Social Media data?',
+        model: 'question12',
+        items: {
+          'I would not sell': 5,
+          'No more than €10': 4,
+          'No more than €100': 3,
+          'No more than €500': 2,
+          'More than €500': 1
 
         }
       }];
@@ -323,6 +496,10 @@ angular.module('controllers', [])
     $scope.answers.question6 = 3;
     $scope.answers.question7 = 3;
     $scope.answers.question8 = 3;
+    $scope.answers.question9 = 3;
+    $scope.answers.question10 = 3;
+    $scope.answers.question11 = 3;
+    $scope.answers.question12 = 3;
 
     Account.getQuestions().then(function(data){
       $ionicLoading.hide();
@@ -349,6 +526,7 @@ angular.module('controllers', [])
       window.localStorage.score = score;
 
       Account.updateQuestions($scope.answers).then(function(){
+        pageViewed.questions = 1;
         $ionicLoading.hide();
         $state.go('app.results');
       });
@@ -359,6 +537,50 @@ angular.module('controllers', [])
   .controller('ResultsCtrl', function($scope, $state){
 
     $scope.privacyScore = window.localStorage.score;
+
+
+    var result_table = [
+      {
+        label: "Actual bigfoot (A)",
+        text: "Are you hairy? It's because I can't see you. You use social media seldom and are very careful with posting private information. With this usage you might miss out or not know about what social media can do for yourself and business promotion.",
+        image: "newA.png"
+      },
+      {
+        label: "Orang-Utan (B)",
+        text: "It’s a small print, but it’s leaving its tracks. You don’t seem to use social media on a regular base and you seem to be aware of how it works and what impact it has. You might have a tendency to not actively participate in social media by using it as a general information tool.",
+        image: "newB.png"
+      },
+      {
+        label: "Apeman (C)",
+        text: "Apeman: Evolving and getting better, but not quite there yet. You tend to use social media quite often, but are pretty cautious what you put up on the web. However, you might let your guard down every once in a while.",
+        image: "newC.png"
+      },
+      {
+        label: "Silverback gorilla (D)",
+        text: "Please do not crush me with your huge feet! You tend to use social media at least once a day and you are actively engaged with it. Once in a while you think about what personal information might not be smart to put up on the web, but it’s not like you care that often.",
+        image: "newD.png"
+      },
+      {
+        label: "King-kong (E)",
+        text: "Will you look at the size of that thing? You almost crushed that guy’s house! You use social media quite a few times every day and are actively engaged with it. You don’t really seem care about what happens with your data.",
+        image: "newE.png"
+      }
+    ];
+    var result_index = 0;
+    if (window.localStorage.score > 48 && window.localStorage.score <= 60) {
+      result_index = 4;
+    } else if (window.localStorage.score > 36 && window.localStorage.score <= 48) {
+      result_index = 3;
+    } else if (window.localStorage.score > 25 && window.localStorage.score <= 36) {
+      result_index = 2;
+    } else if (window.localStorage.score > 13 && window.localStorage.score <= 25) {
+      result_index = 1;
+    }
+
+    $scope.scoreTitle = result_table[result_index].label;
+    $scope.scoreText = result_table[result_index].text;
+    $scope.scoreimage = result_table[result_index].image;
+
   })
 
   .controller('AnalysisCtrl', function($scope, $http, $q, Account, UserService, serverUrl, $ionicLoading, $ionicPlatform){
@@ -447,25 +669,30 @@ angular.module('controllers', [])
   $scope.labels = statsObj.labels;
   $scope.data = statsObj.data;
 
-  $state.reload();
 })
 
 
-.controller('HomeCtrl', function($scope, $http, $q, $ionicPlatform, UserService, serverUrl, $ionicPopup, $ionicActionSheet, $state, Account, $ionicLoading){
-
+.controller('HomeCtrl', function($scope, pageViewed, $http, $q, $timeout, $ionicPlatform, UserService, serverUrl, $ionicPopup, $ionicActionSheet, $state, Account, $ionicLoading, ionicMaterialMotion, ionicMaterialInk){
 	//This gets user data from local storage depreceated as data is now retrived from remote server **MF**
   //$scope.user = UserService.getUser();
   $ionicLoading.hide();
   $ionicLoading.show({
     template: 'retrieving user data...'
   });
-
+  $scope.$parent.showHeader();
+  $scope.$parent.clearFabs();
+  $scope.isExpanded = false;
+  $scope.$parent.setExpanded(false);
+  $scope.$parent.setHeaderFab(false);
 
   $scope.getProfile = function() {
     Account.getProfile()
       .then(function(response) {
         $scope.user = response.data;
         $ionicLoading.hide();
+
+
+
       })
       .catch(function(response) {
        alert(response.data.message, response.status);
@@ -481,6 +708,8 @@ angular.module('controllers', [])
     Account.updateProfile($scope.user)
       .then(function() {
         $ionicLoading.hide();
+        pageViewed.messageAnal = 1;
+        pageViewed.stats = 1;
         $state.go('app.stats');
       })
       .catch(function(response) {
@@ -638,7 +867,151 @@ angular.module('controllers', [])
     getFBlikes();
   });
 
+  // Set Motion **Wrap this around a listenter fro profile pic load**
+  console.log('motion started')
+  $timeout(function() {
+    ionicMaterialMotion.slideUp({
+      selector: '.slide-up'
+    });
+  }, 300);
 
+  $timeout(function() {
+    ionicMaterialMotion.fadeSlideInRight({
+      startVelocity: 3000
+    });
+  }, 700);
+
+
+}).directive('headerShrink', function($document) {
+  var fadeAmt,logoAmount;
+
+  var shrink = function(header, content, amt, max, imgLogo, disapearItems) {
+    amt = Math.min(190, amt);
+    fadeAmt = 1 - amt / 75;
+    logoAmount = (amt - 90)/170 * 10;
+    shrinkAmt = logoAmount/20 +0.5;
+    shrinkAmt = 1.4 - shrinkAmt;
+    logoAmount = logoAmount*3.7;
+    ionic.requestAnimationFrame(function() {
+      header.style[ionic.CSS.TRANSFORM] = 'translate3d(0, -' + amt + 'px, 0)';
+
+      imgLogo.style[ionic.CSS.TRANSFORM] = 'translate3d(0, -' + logoAmount + 'px, 0) scale3d('+shrinkAmt+','+shrinkAmt+',1) ';
+
+      disapearItems.style.opacity = fadeAmt;
+
+    });
+  };
+
+  return {
+    restrict: 'A',
+    link: function($scope, $element, $attr) {
+      var starty = $scope.$eval($attr.headerShrink) || 0;
+      var shrinkAmt;
+
+      var header = $document[0].body.querySelector('.bar-header');
+      var imgLogo = $document[0].body.querySelector('img.logo');
+      var disapearItems = $document[0].body.querySelector('div.disapearItems');
+      var hideScrollBtn = $document[0].body.querySelector('button.hideScrollBtn');
+
+      var headerHeight = header.offsetHeight;
+
+      $element.bind('scroll', function(e) {
+        var scrollTop = null;
+        var scrollBottom = null;
+        var inversePadding = 185; //This value is to offset the css margin-bottom value on .front-page
+        if(e.detail){
+          scrollTop = e.detail.scrollTop;
+          scrollBottom = e.target.offsetHeight - (e.target.scrollHeight - e.detail.scrollTop) - inversePadding;
+        }else if(e.target){
+          scrollTop = e.target.scrollTop;
+          scrollBottom = e.target.scrollHeight - e.target.offsetHeight - e.target.scrollTop - inversePadding;
+        }
+
+        if(scrollBottom < -200){
+          hideScrollBtn.style.opacity = 1;
+        }else if(scrollBottom > -199){
+          hideScrollBtn.style.opacity = 0;
+        }
+        if(scrollTop > starty){
+          // Start shrinking
+          shrinkAmt = headerHeight - Math.max(0, (starty + headerHeight) - scrollTop);
+          shrink(header, $element[0], shrinkAmt, headerHeight, imgLogo, disapearItems);
+        } else {
+          shrink(header, $element[0], 0, headerHeight, imgLogo, disapearItems);
+        }
+      });
+    }
+  }
 })
+  .directive('profileHeaderShrink', function($document) {
+    var fadeAmt,logoAmount;
+    var shrink = function(header, content, amt, max, imgLogo, userDetails) {
+      //samt = Math.min(100, amt);
+      amt = Math.min(196, amt);
+      samt = (amt / 110) * 75;
+      fadeAmt = 1 - amt / 50;
+      ionic.requestAnimationFrame(function () {
+        header.style[ionic.CSS.TRANSFORM] = 'translate3d(0, -' + amt + 'px, 0)';
+        imgLogo.style[ionic.CSS.TRANSFORM] = 'translate3d(0, ' + samt + 'px, 0)';
+        userDetails.style.opacity = fadeAmt;
+      });
+    };
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        var starty = $scope.$eval($attr.headerShrink) || 0;
+        var shrinkAmt;
 
-;
+        var header = $document[0].body.querySelector('.profile-header-content');
+
+        var imgLogo = $document[0].body.querySelector('div#imglogo');
+
+        var userDetails =  $document[0].body.querySelector('.user-details');
+
+        var headerHeight = header.offsetHeight;
+
+        $element.bind('scroll', function(e) {
+          var scrollTop = null;
+          var scrollBottom = null;
+          var inversePadding = 185; //This value is to offset the css margin-bottom value on .front-page
+          if(e.detail){
+            scrollTop = e.detail.scrollTop;
+            scrollBottom = e.target.offsetHeight - (e.target.scrollHeight - e.detail.scrollTop) - inversePadding;
+          }else if(e.target){
+            scrollTop = e.target.scrollTop;
+            scrollBottom = e.target.scrollHeight - e.target.offsetHeight - e.target.scrollTop - inversePadding;
+          }
+
+          if(scrollTop > starty){
+            // Start shrinking
+            shrinkAmt = headerHeight - Math.max(0, (starty + headerHeight) - scrollTop);
+            shrink(header, $element[0], shrinkAmt, headerHeight, imgLogo, userDetails);
+          } else {
+            shrink(header, $element[0], 0, headerHeight, imgLogo, userDetails);
+          }
+        });
+      }
+    }
+  })
+  .directive('scrollWatch', function($rootScope) {
+    return function(scope, elem, attr) {
+      var threshold = attr.scrollWatch;
+      elem.bind('scroll', function(e) {
+        if(e.detail.scrollTop > threshold && $rootScope.slideHeaderPrevious !== e.detail.scrollTop) {
+          $rootScope.slideHeader = true;
+        } else if($rootScope.slideHeaderPrevious !== e.detail.scrollTop){
+          //shopw head
+          $rootScope.slideHeader = false;
+        }
+        if ($rootScope.slideHeaderPrevious > e.detail.scrollTop){
+          //Show head
+          $rootScope.slideHeader = false;
+
+        }
+        $rootScope.slideHeaderPrevious = e.detail.scrollTop;
+
+        $rootScope.$apply();
+      });
+    };
+  });
+

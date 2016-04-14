@@ -3061,9 +3061,6 @@ a.subdued {
   @media (min--moz-device-pixel-ratio: 1.5), (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5), (min-resolution: 144dpi), (min-resolution: 1.5dppx) {
     .bar {
       border: none;
-      background-image: linear-gradient(0deg, #ddd, #ddd 50%, transparent 50%);
-      background-position: bottom;
-      background-size: 100% 1px;
       background-repeat: no-repeat; } }
   .bar.bar-clear {
     border: none;
@@ -3100,9 +3097,12 @@ a.subdued {
       background-image: linear-gradient(180deg, #b2b2b2, #b2b2b2 50%, transparent 50%); }
   .bar.bar-positive {
     border-color: #0c60ee;
-    background-color: #119;
+    background-color: #0b4a99;
     background-image: linear-gradient(0deg, #0c60ee, #0c60ee 50%, transparent 50%);
     color: #fff; }
+.bar.bar-positive.no-shadow{
+  box-shadow: none;
+}
     .bar.bar-positive .title {
       color: #fff; }
     .bar.bar-positive.bar-footer {
@@ -3553,9 +3553,9 @@ a.subdued {
     color: #f8f8f8; }
 
 .tabs-positive > .tabs, .tabs.tabs-positive {
-  border-color: #0c60ee;
-  background-color: #387ef5;
-  background-image: linear-gradient(0deg, #0c60ee, #0c60ee 50%, transparent 50%);
+  border-color: #0b4a99;
+  background-color: #0b4a99;
+  background-size: 100% 0px;
   color: #fff; }
   .tabs-positive > .tabs .tab-item .badge, .tabs.tabs-positive .tab-item .badge {
     background-color: #fff;
@@ -6602,6 +6602,8 @@ progress {
   .button.button-block, .button.button-full {
     margin-top: 10px;
     margin-bottom: 10px; }
+  .button.button-full.no-bottom-margin{
+    margin-bottom: 0px; }
   .button.button-light {
     border-color: #ddd;
     background-color: #fff;
@@ -6658,7 +6660,7 @@ progress {
         color: #fff; }
   .button.button-positive {
     border-color: #ddd;
-    background-color: #119;
+    background-color: #0b4a99;
     color: #fff; }
     .button.button-positive:hover {
       color: #fff;
@@ -7705,7 +7707,23 @@ a.button {
   transition-duration: 0s; }
 
 .welcome-view {
-  background-color: #0b4a99; }
+  background-color: #fff;
+
+}
+.bar-header.start-page {
+  height: 234px;
+}
+.bar-header.start-page .cover{
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  z-index: 1;
+  height: 234px;
+  background: url('../img/termsSplash.jpg') top center;
+  background-size: 100%;
+}
+
+
   .welcome-view .top-content { }
 
     .welcome-view .top-content .app-copy {
@@ -7765,9 +7783,13 @@ div.top-bar-locked{
   margin:18px 0px;
 }
 .front-page{
-  top: 65px;
-  padding-top: 65px;
-  background: #fff;
+  top: 45px;
+  padding-top: 185px;
+  margin-bottom: -185px;
+  background: #eee;
+}
+.grey-background{
+  background: #eee;
 }
 .front-page.blue-plane{
   background: #119;
@@ -7787,23 +7809,32 @@ h3{
   margin-bottom: 10px;
 }
 section.terms{
-  color: #fff;
+  color: #333;
+
+}
+section.terms section{
+  margin: 20px 20px;
 }
 section.terms h1{
-  font-size:26px;
+  font-size:19px;
+  text-align: center;
 }
 section.terms h2{
-  font-size:22px;
+  font-size:18px;
+  text-align: center;
 }
 section.terms h2, section.terms h1{
   margin: 15px 0px 10px 0px;
-  color: #fff;
+  color: #444;
 }
+
 section.terms p{
   margin: 10px 0px;
+  font-size: 12px;
+  text-align: justify;
 }
 section.terms ul{
-  font-size:14px;
+  font-size:12px;
 }
 .questions .form-group{
   margin-bottom: 20px;
@@ -7814,3 +7845,98 @@ ion-content.questions .input-label{
 ion-nav-title strong{
   color: #ffa500;
 }
+img.results{
+  float:right;
+  width:120px;
+  height: auto;
+}
+img.logo{
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right:0;
+  z-index: 10;
+  height: 50px;
+  width: auto;
+  margin: 0 auto;
+}
+.bar-header.start-page p{
+  position: relative;
+  z-index: 2;
+  margin: 90px 0px 0px 0px;
+  width:100%;
+  text-align: center;
+  font-weight: bold;
+  color: #eee;
+}
+.card.absolute-card-bottom{
+  position:absolute;
+  bottom: 0px;
+}
+.button.button-block.fblogin{
+  margin:0px;
+}
+.tabs.tabs-positive {
+  background-color: #0b4a99;
+}
+div.dark-overlay{
+  position: absolute;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,2,0.6);
+}
+i.float-right-avatar.icon{
+  font-size:48px;
+  float:right;
+  padding: 10px;
+  margin-left: 10px;
+
+}
+ion-content.profile-content{
+  padding-top: 250px;
+  z-index: 1;
+  margin-bottom: -250px;
+}
+ion-content.statistics-page{
+  padding-top: 44px;
+  z-index: 1;
+  margin-bottom: -44px;
+}
+div.profile-header-content{
+  position: absolute;
+  top:40px;
+  width:100%;
+  z-index: 2;
+}
+span.large-text{
+  font-size: 18px;
+}
+div.disapearItems{
+  width:100%;
+}
+div.tabs.tabs-sub-header{
+  position: absolute;
+  transition: top 0.25s ease;
+  top:44px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+}
+div.profile-header-content div.tabs.tabs-sub-header{
+  top:200px;
+}
+ion-header-bar{
+  position: absolute;
+  transition: top 0.25s ease;
+}
+body.bar-header-slide-away div.tabs-sub-header{
+  top:0px;
+}
+body.bar-header-slide-away div.profile-header-content div.tabs-sub-header{
+  top:156px;
+}
+body.bar-header-slide-away ion-header-bar{
+  top:-44px;
+}
+div.stats-item h3{
+  margin:10px 0px;
+}
+div.stats-item
