@@ -1,37 +1,42 @@
 <ion-view class="home-view">
+  <button id="fab-profile" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-search"></i></button>
   <ion-nav-title>
     <strong>Your Activity</strong>
   </ion-nav-title>
     <div class="tabs tabs-positive tabs-icon-top tabs-sub-header">
-    <a ui-sref="app.stats" ui-sref-active="active" class="tab-item">
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'a' }" ng-click="tabClick('a')">
       <i class="icon ion-thumbsup"></i> By Likes
     </a>
-    <a ui-sref="app.friends" ui-sref-active="active" class="tab-item">
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'b' }" ng-click="tabClick('b')">
       <i class="icon ion-chatboxes"></i> By Comments
-    </a>
-    <a ui-sref="app.gallery" ui-sref-active="active" class="tab-item">
+      </a>
+      <a class="tab-item" ng-class="{ 'active': tabItem === 'c' }" ng-click="tabClick('c')">
       <i class="icon ion-android-share-alt"></i> By Shares
     </a>
   </div>
+  <div id="sendSerachTermUp" class="item item-divider top-locked-grey" ng-click="sendSerachTermUp()">
+    <span class="text-normal">Your most</span>  Popular Post <span class="text-normal"> by</span>  <strong>{{filterType}}</strong>
+    <span class="large-font-info right"><i class="icon ion-arrow-up-b"></i></span>
+  </div>
 
-  <ion-content scroll-watch="88" scroll-event-interval="10" class="white statistics-page">
 
-    <div class="list">
-      <div class="item item-divider">
-        Your most popular post by: <strong>Likes</strong>
+  <ion-content scroll-watch="88" scroll-event-interval="10" class="grey-background statistics-page">
+
+
+
+    <div class="card" ng-click="sidepopupList($index)" ng-repeat="item in likeList">
+      <div class="item item-text-wrap">
+        <img ng-show="item.picture != null" class="left-float-post-img" src="{{item.picture}}">
+        <i class="icon float-right-avatar-small ion-android-more-vertical"></i>
+        <span ng-show="item.message != null">&ldquo;{{item.message}}&rdquo;</span>
+        <div class="card-footer">
+          <span ng-show="item.likes != null"><i class="icon muted ion-thumbsup"> {{item.likes.data.length}} Likes </i></span>
+          <span ng-show="item.comments != null"> <i class="icon muted ion-chatboxes"> {{item.comments.data.length}} Comments </i></span>
+          <span ng-show="item.shares != null"> <i class="icon muted ion-android-share-alt"> {{item.shares.count}} Shares</i></span>
+        </div>
       </div>
-
-
-      <div ng-repeat="item in catitems" class="item item-avatar stats-item item-icon-right">
-        <span class="avatar"><i class="icon">{{$index+1}}</i></span>
-        <h2>{{item.cat}}...</h2>
-        <p><strong>Subject:</strong> {{item.cat}}</p>
-        <i class="icon ion-thumbsup muted">{{item.count}}</i>
-      </div>
-
-
-
     </div>
+
   <!--  <div class="row">
       <div class="col">
 

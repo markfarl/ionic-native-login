@@ -111,7 +111,7 @@ angular.module('controllers', [])
         console.log('Auth Header set');
         //Now go to home page
         $ionicLoading.hide();
-        $state.go('app.home.mydetails');
+        $state.go('app.home');
       })
       .error(function(data, status) {
         console.error(' error', status, data);
@@ -180,7 +180,7 @@ angular.module('controllers', [])
 
 
 
-  .controller('AppCtrl', function($scope, $ionicScrollDelegate, $rootScope, $state, $timeout, $ionicHistory, $window, pageViewed, $ionicPopup, $ionicLoading){
+  .controller('AppCtrl', function($scope, $document, $ionicScrollDelegate, $rootScope, $state, $timeout, $ionicHistory, $window, pageViewed, $ionicPopup, $ionicLoading){
 
     //Material Design Functions
     // Form data for the login modal
@@ -196,16 +196,22 @@ angular.module('controllers', [])
 
     //Url here is gotten from ng-click
     $scope.changeStateUrl = function(stateUrl){
-      console.log('balls'+stateUrl);
+
+      $scope.ngIncludeUrlState = stateUrl;
       $scope.ngIncludeUrl = 'views/'+stateUrl+'.html';
       $ionicScrollDelegate.resize();
       $ionicScrollDelegate.scrollTop();
 
     };
-    //Url is set also in app.js
-    if (typeof $state.current.views.dashboardContent != "undefined") {
-      $scope.ngIncludeUrl = $state.current.views.dashboardContent.templateUrl;
-    }
+    //DefaULT uRL stATE
+    $scope.ngIncludeUrl = 'views/mydetails.html';
+    $scope.ngIncludeUrlState = 'mydetails';
+
+    $scope.sendSerachTermUp = function(){
+      $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, -50px, 0)';
+      $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, -40px, 0)';
+    };
+
 
 
 
@@ -643,8 +649,160 @@ angular.module('controllers', [])
     });
 
   })
-.controller('StatsCtrl', function($scope, $http, $q, $ionicLoading, $ionicPlatform, UserService, serverUrl, $ionicActionSheet, $state, Account, $window){
-  console.log('Parse Big Object');
+.controller('StatsCtrl', function($scope, $document, $http, $q, $ionicLoading, $ionicPlatform, UserService, $ionicPopup, serverUrl, $ionicActionSheet, $ionicScrollDelegate, $state, Account, $window){
+  console.log('stats');
+
+  var getFBfeed = function() {
+    var q = $q.defer();
+    $ionicLoading.show({
+      template: 'Retrieving facebook data...'
+    });
+    facebookConnectPlugin.api('/me/feed?fields=likes,shares,comments,message,link,place,picture&access_token=' + fbUserObj.authResponse.accessToken+'&limit=200', null,
+      function (response) {
+        console.log(response);
+        //setCommentsList(response);
+        $ionicLoading.hide();
+        fbFeed = response;
+        window.localStorage.fbfeed = JSON.stringify(response);
+        return q.resolve();
+      });
+    return q.promise;
+  };
+
+  var fbFeed;
+
+  $scope.sidepopupList = function(item){
+    console.log($scope.likeList[item]);
+    // Show the action sheet
+    var showActionSheet = $ionicActionSheet.show({
+        buttons: [
+      {
+        text: 'Share this post',
+        type: 'button-block button-positive',
+        onTap: function(e) {
+          console.log(e);
+        }
+      },
+      {
+        text: 'View post',
+        type: 'button-block button-positive',
+        onTap: function(e) {
+          console.log(e);
+        }
+      }
+    ],
+      titleText: $scope.likeList[item].message,
+      cancelText: 'Cancel',
+
+      cancel: function() {
+        // add cancel code...
+      },
+
+      buttonClicked: function(index) {
+        if(index === 0) {
+          // add edit 1 code
+        }
+
+        if(index === 1) {
+          // add edit 2 code
+        }
+      },
+
+      destructiveButtonClicked: function() {
+        // add delete code..
+      }
+    });
+  };
+
+
+  var fbUserObj = UserService.getUser('facebook');
+
+  $scope.tabClick = function(filter){
+    console.log(filter)
+    $scope.tabItem = filter;
+    if(filter=='a'){
+      setLikesList(fbFeed);
+      $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+      $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+      $ionicScrollDelegate.resize();
+      $ionicScrollDelegate.scrollTop();
+    }else if(filter=='b'){
+      setCommentsList(fbFeed);
+      $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+      $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+      $ionicScrollDelegate.resize();
+      $ionicScrollDelegate.scrollTop();
+    }else if(filter=='c'){
+      setShareList(fbFeed);
+      $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+      $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+      $ionicScrollDelegate.resize();
+      $ionicScrollDelegate.scrollTop();
+    }
+  };
+
+  var setLikesList = function(data){
+   $scope.tabItem = 'a';
+   var likeList = _.filter(data.data, function(num){
+     return num.likes !== undefined;
+   });
+   likeList = _(likeList).chain().sortBy(function(x) {
+      return x.likes.data.length;
+    }).value().reverse();
+    likeList  = likeList.slice(0,10);
+    $scope.likeList = likeList;
+    $scope.iconClass = 'ion-thumbsup';
+    $scope.filterType = 'Likes';
+  };
+
+
+
+  var setCommentsList = function(data){
+    var likeList = _.filter(data.data, function(num){
+      return num.comments !== undefined;
+    });
+    likeList = _(likeList).chain().sortBy(function(x) {
+      return x.comments.data.length;
+    }).value().reverse();
+    likeList  = likeList.slice(0,10);
+
+    $scope.likeList = likeList;
+    $scope.iconClass = 'ion-chatboxes';
+    $scope.filterType = 'Comments';
+  };
+
+  var setShareList = function(data){
+    console.log(data);
+    var likeList = _.filter(data.data, function(num){
+      return num.shares !== undefined;
+    });
+    likeList = _(likeList).chain().sortBy(function(x) {
+      return x.shares.count;
+    }).value().reverse();
+    likeList  = likeList.slice(0,10);
+
+    $scope.likeList = likeList;
+    $scope.iconClass = 'ion-android-share-alt';
+    $scope.filterType = 'Shares';
+  };
+
+
+  $ionicPlatform.ready(function() {
+    if(window.localStorage.fbfeed!==undefined){
+      console.log('feed stored');
+      fbFeed = JSON.parse(window.localStorage.fbfeed);
+      console.log(fbFeed);
+      setLikesList(fbFeed);
+    }else{
+      console.log('feed not stored grab');
+      getFBfeed(fbUserObj.authResponse.accessToken).then(function(){
+        console.log('start list');
+        setLikesList(fbFeed);
+      });
+    }
+  });
+
+  /* console.log('Parse Big Object');
   console.log(window.localStorage.postStatsObj);
   var postStatsObj = JSON.parse(window.localStorage.postStatsObj);
 
@@ -668,7 +826,7 @@ angular.module('controllers', [])
   var statsObj = JSON.parse(window.localStorage.stats);
   $scope.labels = statsObj.labels;
   $scope.data = statsObj.data;
-
+ */
 })
 
 
@@ -777,7 +935,6 @@ angular.module('controllers', [])
       labels: _(timestamps).pluck('year'),
       data: [_(timestamps).pluck('count')]
     });
-    console.log(window.localStorage.stats);
 
     //Parse category data, second graph here
     var categories = _(likeData).pluck('category');
@@ -887,7 +1044,7 @@ angular.module('controllers', [])
 
   var shrink = function(header, content, amt, max, imgLogo, disapearItems) {
     amt = Math.min(190, amt);
-    fadeAmt = 1 - amt / 75;
+    fadeAmt =  amt / 75;
     logoAmount = (amt - 90)/170 * 10;
     shrinkAmt = logoAmount/20 +0.5;
     shrinkAmt = 1.4 - shrinkAmt;
@@ -910,7 +1067,7 @@ angular.module('controllers', [])
 
       var header = $document[0].body.querySelector('.bar-header');
       var imgLogo = $document[0].body.querySelector('img.logo');
-      var disapearItems = $document[0].body.querySelector('div.disapearItems');
+      var disapearItems = $document[0].body.querySelector('div.dissapearBlue');
       var hideScrollBtn = $document[0].body.querySelector('button.hideScrollBtn');
 
       var headerHeight = header.offsetHeight;
@@ -1006,7 +1163,6 @@ angular.module('controllers', [])
         if ($rootScope.slideHeaderPrevious > e.detail.scrollTop){
           //Show head
           $rootScope.slideHeader = false;
-
         }
         $rootScope.slideHeaderPrevious = e.detail.scrollTop;
 

@@ -19,7 +19,7 @@ angular.module('services', [])
     setUser: setUser
   };
 })
-.factory('Account', function($http, serverUrl) {
+.factory('Account', function($http, serverUrl, $q) {
   return {
     getProfile: function() {
       return $http.get(serverUrl+'/api/me');
@@ -38,6 +38,16 @@ angular.module('services', [])
     },
     updateSentiment: function(data){
       return $http.put(serverUrl+'/api/me/updatesentiment', {data: data});
+    },
+    getFBfeed: function(access){
+      var q = $q.defer();
+       facebookConnectPlugin.api('/me/feed?fields=likes,shares,comments,message&access_token=' + access +'&limit=200', null,
+        function (response) {
+          window.localStorage.fbfeed = JSON.stringify(response);
+          console.log('success');
+          q.resolve;
+        });
+      return q.promise;
     }
   };
 })

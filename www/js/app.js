@@ -75,7 +75,6 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
 
   .state('app', {
     url: "/app",
-    cache : false,
     abstract: true,
     templateUrl: "views/sidemenu.html",
     controller: 'AppCtrl'
@@ -83,7 +82,6 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
 
   .state('app.home', {
     url: "/home",
-    cache : false,
     views: {
       'menuContent': {
         templateUrl: "views/home.html",
@@ -91,29 +89,9 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
       }
     }
   })
-    .state('app.home.analytics', {
-      url: "/analytics",
-      cache : false,
-      views: {
-        'dashboardContent': {
-          templateUrl: "views/analytics.html"
-        }
-      }
-    })
-
-    .state('app.home.mydetails', {
-      url: "/mydetails",
-      cache : false,
-      views: {
-        'dashboardContent': {
-          templateUrl: "views/mydetails.html"
-        }
-      }
-    })
 
     .state('app.stats', {
       url: "/stats",
-      cache : false,
       views: {
         'menuContent': {
           templateUrl: "views/stats.html",
