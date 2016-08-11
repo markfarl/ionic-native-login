@@ -1,0 +1,41 @@
+<ion-view class="home-view">
+  <ion-nav-title>
+    <strong>Bigfoot</strong> | Dashboard
+  </ion-nav-title>
+  <ion-content class="grey-background">
+    <div class="card grid full green" ng-click="changeState('app.results-monkey')">
+      <div class="">
+        Difference: 21%
+      </div>
+      <div class="item item-text-wrap">
+        <canvas class="chart chart-doughnut" chart-data="cdata" chart-labels="clabels" chart-options="{showTooltips: false}">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="card grid blue" ng-click="changeState('app.stats')">
+      <div class="icon-cirlce-wrapper dashboard">
+        <i class="icon float-right-avatar ion-ios-analytics-outline"></i>
+      </div>
+      <p>Usage Statistics</p>
+    </div>
+    <div class="card grid second yellow " ng-click="changeState('app.third-party-stats')">
+      <div class="icon-cirlce-wrapper dashboard">
+        <i class="icon float-right-avatar ion-ios-people"></i>
+      </div>
+      <p>Related Usage</p>
+    </div>
+    <div class="card grid red" ng-click="changeState('app.home')">
+      <div class="icon-cirlce-wrapper dashboard">
+        <i class="icon float-right-avatar ion-person"></i>
+      </div>
+      <p>Profile</p>
+    </div>
+    <div class="card grid second green" ng-click="changeState('app.friends-stats')">
+      <div class="icon-cirlce-wrapper dashboard">
+        <i class="icon float-right-avatar ion-person-stalker"></i>
+      </div>
+      <p>Tagged Posts</p>
+    </div>
+  </ion-content>
+</ion-view>

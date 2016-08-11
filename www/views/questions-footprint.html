@@ -1,0 +1,15 @@
+<div class="card form-group" ng-repeat="question in questionmaster">
+  <div class="item item-text-wrap">
+    <p>{{question.title}}</p>
+  </div>
+  <label class="item item-input item-select item-stable">
+    <div class="input-label">
+    </div>
+    <select ng-model="answers[question.model]" ng-options="name for (name, value) in question.items">
+    </select>
+  </label>
+</div>
+  <a class="button card button-positive button-block " ng-click="sendQuestionstoProfile()">
+    Save &amp; Continue
+  </a>
+

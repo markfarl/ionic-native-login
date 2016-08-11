@@ -1,46 +1,52 @@
-<div class="card">
-<div class="item item-text-wrap" ng-click="changeState('app.stats')">
-  <i class="icon float-right-avatar ion-person"></i>
-  <strong>Your <span class="large-text">Facebook</span></strong> Activity
-  <div class="card-footer">
-    List and Categorise all your most popular posts. List and Categorise your friends popular posts and photos on your wall or in which you are tagged.
+<div class="card card-button" ng-click="changeState('app.stats')">
+  <button class="button title-padding button-full no-bottom-top-margin ink"><strong>Your <span class="large-text">Facebook</span></strong> Activity</button>
+  <div class="item item-text-wrap">
+    <div class="icon-cirlce-wrapper">
+      <i class="icon float-right-avatar ion-person"></i>
+    </div>
+    <div class="card-footer">
+      List and Categorise all your most popular posts. Lists your most popular posts by comments, likes or shares.
+    </div>
+    <button class="button button-positive button-full no-bottom-margin ink">VIEW LIST</button>
   </div>
 </div>
-</div>
 
-<div class="card">
-  <div class="item item-text-wrap" ng-click="changeState('app.stats')">
-    <i class="icon float-right-avatar ion-person-stalker"></i>
-    <strong>Your <span class="large-text">Friends</span></strong> Related Activity
+<div class="card card-button" ng-click="changeState('app.friends-stats')">
+  <button class="button title-padding button-full no-bottom-top-margin ink"><strong>Your <span class="large-text">Friends</span></strong> Tagged Activity</button>
+  <div class="item item-text-wrap">
+    <div class="icon-cirlce-wrapper">
+      <i class="icon float-right-avatar ion-person-stalker"></i>
+    </div>
     <div class="card-footer">
       List and Categorise your friends popular posts and photos on your wall or in which you are tagged.
     </div>
+    <button class="button button-positive button-full no-bottom-margin ink">VIEW LIST</button>
   </div>
-
 </div>
 
-<div class="card">
-  <div class="item item-text-wrap" ng-click="changeState('app.stats')">
-    <i class="icon float-right-avatar ion-ipad"></i>
-    <strong>Your <span class="large-text">Installed Apps</span></strong> Activity
-    <div class="card-footer">
-      List and Categorise 3rd party apps you installed activity by freqeucy. Categorise your friends popular posts and photos on your wall or in which you are tagged.
+<div class="card card-button" ng-click="changeState('app.third-party-stats')">
+  <button class="button title-padding button-full no-bottom-top-margin ink"><strong>Your <span class="large-text">Event </span></strong> Activity</button>
+  <div class="item item-text-wrap">
+    <div class="icon-cirlce-wrapper">
+      <i class="icon float-right-avatar ion-beer"></i>
     </div>
-   <!-- <button ng-click="changeState('app.stats')" class="button button-energized-900 button-full no-bottom-margin ink">VIEW</button> -->
+    <div class="card-footer">
+      List and Categorise Events you have attended and ignored or marked or otherwise marked unsure<br>
+    </div>
+    <button class="button button-positive button-full no-bottom-margin ink">VIEW LIST</button>
   </div>
 </div>
 
-
-<div class="card">
-  <div class="item item-text-wrap" ng-click="changeState('app.stats')">
-    <i class="icon float-right-avatar ion-ios-analytics-outline"></i>
-    <strong>Your <span class="large-text">Digital Footprint</span></strong> Analysis
+<div class="card card-button" ng-click="changeState('app.footprint')">
+  <button class="button button-full title-padding no-bottom-top-margin ink"><strong> <span class="large-text">Digital Footprint</span></strong> Analysis</button>
+  <div class="item item-text-wrap">
+    <div class="icon-cirlce-wrapper">
+      <i class="icon float-right-avatar ion-ios-analytics-outline"></i>
+    </div>
     <div class="card-footer">
       List and Categorise 3rd party apps you installed activity by freqeucy.<br>
       And also show your how exactly your doing these days big boy
     </div>
+    <button class="button button-positive button-full no-bottom-margin ink">VIEW ANALYTICS</button>
   </div>
 </div>
-
-
-

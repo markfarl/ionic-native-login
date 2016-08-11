@@ -1,10 +1,34 @@
 angular.module('controllers', [])
 
-.controller('WelcomeCtrl', function($ionicPopup, $scope, $http, $state, $q, UserService, $ionicLoading, serverUrl, $ionicScrollDelegate) {
+.controller('WelcomeCtrl', function($ionicPopup, Account, $scope, $http, $state, $q, UserService, $ionicLoading, serverUrl, $ionicScrollDelegate) {
 
   //Onpage Load clear auth Header as user will be considered logged out if on this page
-  $http.defaults.headers.common['Authorization'] = '';
 
+  //Check if user has logged in
+  if(window.localStorage.headerAuth!==undefined && window.localStorage.headerAuth !== ''){
+    console.log('logged in');
+    //user is logged in, send them to dashboard
+    $http.defaults.headers.common['Authorization'] = window.localStorage.headerAuth;
+    //Later check if questions
+
+    Account.getQuestions().then(function(data){
+      $ionicLoading.hide();
+      if(Object.getOwnPropertyNames(data.data).length > 0){
+        console.log('answersed');
+        $state.go('app.results-monkey');
+
+        //$state.go('app.dashboard');
+      }else{
+        console.log('not answered');
+        $state.go('slides');
+      }
+    });
+
+  }else{
+    //Logged out clear all
+    window.localStorage.resultsSeen = '';
+    $http.defaults.headers.common['Authorization'] = '';
+  }
 
   $scope.changeState = function(state){
     $state.go(state);
@@ -20,7 +44,6 @@ angular.module('controllers', [])
     }else{
       facebookSignIn();
     }
-
   };
 
   $scope.scrolltoBottom = function(){
@@ -46,7 +69,6 @@ angular.module('controllers', [])
       fbLoginError("Cannot find the authResponse");
       return;
     }
-
 
     var authResponse = response.authResponse;
 
@@ -84,7 +106,7 @@ angular.module('controllers', [])
 
     facebookConnectPlugin.api('/me?fields=email,name&access_token=' + authResponse.accessToken, null,
       function (response) {
-				console.log(response);
+				console.log(JSON.stringify(response));
         info.resolve(response);
       },
       function (response) {
@@ -108,10 +130,26 @@ angular.module('controllers', [])
 
         //Set the returning token in the auth header, which allows auth for profile data **MF**
         $http.defaults.headers.common['Authorization'] = 'Bearer '+data.token;
+
+        //set it in storage so user remains logged in
+        window.localStorage.headerAuth = 'Bearer '+data.token;
         console.log('Auth Header set');
         //Now go to home page
-        $ionicLoading.hide();
-        $state.go('app.home');
+
+        //CHeck if questions answer
+        Account.getQuestions().then(function(data){
+          $ionicLoading.hide();
+          if(Object.getOwnPropertyNames(data.data).length > 0){
+            console.log('answersed');
+            $state.go('app.dashboard');
+          }else{
+            $state.go('slides');
+          }
+        });
+
+
+
+        //$state.go('app.results-monkey');
       })
       .error(function(data, status) {
         console.error(' error', status, data);
@@ -127,13 +165,7 @@ angular.module('controllers', [])
     facebookConnectPlugin.getLoginStatus(function(success){
       console.log(JSON.stringify(success));
      if(success.status === 'connected'){
-       console.log('succes');
-        // the user is logged in and has authenticated your app, and response.authResponse supplies
-        // the user's ID, a valid access token, a signed request, and the time the access token
-        // and signed request each expire
-
-
-       //check if we have our user saved
+        console.log('succes');
 
 				var user = UserService.getUser('facebook');
 
@@ -171,13 +203,213 @@ angular.module('controllers', [])
         console.log('getLoginStatus', success.status);
 
         //ask the permissions you need. You can learn more about FB permissions here: https://developers.facebook.com/docs/facebook-login/permissions/v2.4
-        facebookConnectPlugin.login(['email', 'public_profile', 'user_posts', 'user_likes'], fbLoginSuccess, fbLoginError);
+        facebookConnectPlugin.login(['email', 'public_profile', 'user_posts', 'user_likes', 'user_photos', 'user_events'], fbLoginSuccess, fbLoginError);
       }
     });
   };
 })
+  .controller('ResultsMonkeyCtrl', function(Account, $scope, $state, $http,  resultsType, $ionicSlideBoxDelegate) {
+
+    window.localStorage.resultsSeen = 'true';
+    $http.defaults.headers.common['Authorization'] = window.localStorage.headerAuth;
+
+    //GET RESULTS
+    Account.getQuestions().then(function(data){
+      window.localStorage.questionData = JSON.stringify(data.data);
+      var total = Account.getScore(data);
+      var scoreTotal = Math.round(total*2.083);
+      window.localStorage.preferredScore = scoreTotal;
+      var resultsIndex = 0;
+      $scope.Iimpliict_score = scoreTotal;//for precent
+      if(total>= 0 && total < 10){
+        resultsIndex = 0;
+        }else if(total>= 10 && total < 20){
+        resultsIndex = 1;
+      }else if(total>= 20 && total < 30){
+        resultsIndex = 2;
+      }else if(total>= 30 && total < 40){
+        resultsIndex = 3;
+      }else if(total>= 40 && total < 50) {
+        resultsIndex = 4;
+      }
+
+      $scope.bigfootType = resultsType.result_table[resultsIndex].label;
+      $scope.bigfootText = resultsType.result_table[resultsIndex].text;
+      $scope.imgsrc = resultsType.result_table[resultsIndex].image;
+
+    });
 
 
+    $scope.nextPageDashboard = function(){
+      $state.go('app.explicit-results');
+    };
+
+  })
+  .controller('ResultsMonkeyExplicitCtrl', function(Account, Score, UserService, $scope, $state, $http,  $ionicPlatform, $ionicLoading) {
+
+    $http.defaults.headers.common['Authorization'] = window.localStorage.headerAuth;
+    var preferredScore = window.localStorage.preferredScore;
+
+    var fbUserObj = UserService.getUser('facebook');
+    var answeredData = JSON.parse(window.localStorage.questionData);
+    console.log(answeredData);
+    //savefb user to storage
+    window.localStorage.userID = fbUserObj.userID;
+    console.log(fbUserObj);
+    $ionicPlatform.ready(function() {
+
+      console.log('start');
+      Account.getPostData(fbUserObj.authResponse.accessToken, facebookConnectPlugin).then(function(data){
+
+        var score = Score.getQuestion1(data.data);
+        var q2_score = Score.getQuestion2(data.data);
+        var q3_score = Score.getQuestion3(data.data);
+        var q4_score = Score.getQuestion4(data.data);
+        var q5_score = Score.getQuestion5(data.data);
+        var q7_score = Score.getQuestion7(data.data);
+        var q8_score = Score.getQuestion8(data.data);
+
+        $scope.q1_score ='Your score '+score.score+' your average time is '+score.raw;
+        $scope.q2_score ='Your score '+q2_score.score+' your average time is '+q2_score.raw;
+        $scope.q3_score ='Your score '+q3_score.score+' your average time is '+q3_score.raw;
+        $scope.q4_score ='Your score '+q4_score.score+' your average time is '+q4_score.raw;
+        $scope.q5_score ='Your score '+q5_score.score+' your average time is '+q5_score.raw;
+        $scope.q7_score ='Your score '+q7_score.score+' your average time is '+q7_score.raw;
+        $scope.q8_score ='Your score '+q8_score.score+' your average time is '+q8_score.raw;
+
+
+        Account.getPostTaggedData(fbUserObj.authResponse.accessToken, facebookConnectPlugin).then(function(data){
+          var q6_score = Score.getQuestion6(data);
+          $scope.q6_score ='Your score '+q6_score.score+' your average time is '+q6_score.raw;
+
+          Account.getPageLikes(fbUserObj.authResponse.accessToken, facebookConnectPlugin).then(function(data){
+            var q9_score = Score.getQuestion9(data.data);
+            var q10_score = Score.getQuestion10(data.data);
+            $scope.q9_score ='Your score '+q9_score.score+' your average time is '+q9_score.raw;
+            $scope.q10_score ='Your score '+q10_score.score+' your count is '+JSON.stringify(q10_score.raw);
+
+            Account.getEventData(fbUserObj.authResponse.accessToken, facebookConnectPlugin).then(function(data){
+              var q11_score = Score.getQuestion11(data);
+              $scope.q11_score ='Your score '+q11_score.score+' your average time is '+q11_score.raw;
+
+              var totalScores = score.score+q2_score.score+q3_score.score+q4_score.score+q5_score.score+q6_score.score+q7_score.score+q8_score.score+q9_score.score+q10_score.score+q11_score.score;
+              var getSocialScore = Account.getSocialScore(answeredData);
+              console.log(getSocialScore+ ' Socialscore;');
+              totalScores += getSocialScore;
+              $scope.totalExplicit = Math.round(totalScores*2.083);
+              $scope.preferredScore = preferredScore;
+
+              var sizedifference = $scope.totalExplicit - preferredScore;
+              if (sizedifference>0){
+                $scope.sizeDiff = 'This is <span class="biggerBold">'+Math.abs(sizedifference)+'</span> sizes <span class="biggerBold">larger</span> than your';
+              }else if(sizedifference<0){
+                $scope.sizeDiff = 'This is <span class="biggerBold">'+Math.abs(sizedifference)+'</span> sizes <span class="biggerBold">smaller</span> than your';
+              }else if(sizedifference==0){
+                $scope.sizeDiff = 'This is <span class="biggerBold">Equal</span> size to your';
+              }
+              $scope.clabels = ['Actual','Preferred'] ;
+              $scope.cdata = [ $scope.totalExplicit, preferredScore] ;
+            });
+          });
+        });
+      });
+    });
+
+    $scope.nextPageDashboard = function(){
+      $state.go('app.dashboard');
+    };
+
+  })
+
+  .controller('DashboardCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+    $scope.clabels = ['positive','negative'] ;
+    $scope.cdata = [ 12, 45] ;
+    $scope.sentimentOut = 12;
+
+  })
+  .controller('SlidesCtrl', function($scope, $state, $ionicSlideBoxDelegate, QuestionObjects, $ionicLoading, Account) {
+
+    $scope.answers = {};
+    var question11_change;
+    $scope.question_11 = function(value){
+      question11_change = value;
+    };
+    // Called to navigate to the main app
+    $scope.startApp = function() {
+      $state.go('main');
+    };
+    $scope.next = function() {
+      $ionicSlideBoxDelegate.next();
+    };
+    $scope.previous = function() {
+      $ionicSlideBoxDelegate.previous();
+    };
+
+    // Called each time the slide changes
+    $scope.slideHasChanged = function(index) {
+      console.log(index);
+      //CHeck for slide 1
+      if(index==1){
+        if(!checkIfComplete('questionSetOne')){
+          alert('fill in the questions first before swipe');
+          $ionicSlideBoxDelegate.slide(0)
+        }
+      }else if(index==2){
+        if(!checkIfComplete('questionSetTwo')){
+          alert('fill in the questions two before swipe');
+          $ionicSlideBoxDelegate.slide(1)
+        }
+      }
+    };
+
+    var sendQuestionstoProfile = function(){
+      $ionicLoading.show({
+        template: 'Updating...'
+      });
+      window.localStorage.setupQuestions = JSON.stringify($scope.answers);
+
+      Account.updateQuestions($scope.answers).then(function(){
+        $ionicLoading.hide();
+      });
+    };
+
+    $scope.changeStateDashboard = function(){
+      console.log(question11_change);
+
+      if(question11_change!==undefined){
+        //Post off answers
+        sendQuestionstoProfile();
+
+        $state.go('app.results-monkey');
+      }else{
+        alert('Please select option');
+      }
+    };
+
+
+    var checkIfComplete = function(model){
+      var mymodel = $scope.questionsSet[model].length;
+      var continueNext = true;
+      for(i=0 ; i < mymodel ; i++){
+        console.log($scope.answers[$scope.questionsSet[model][i].model]);
+        if($scope.answers[$scope.questionsSet[model][i].model]==undefined){
+          continueNext = false;
+        }
+      }
+      return continueNext;
+    };
+
+
+    $scope.slideCheckwhenIput = function(model){
+      if(checkIfComplete(model)){
+        $ionicSlideBoxDelegate.next();
+      }
+    };
+
+    $scope.questionsSet = QuestionObjects;
+
+
+  })
 
 
   .controller('AppCtrl', function($scope, $document, $ionicScrollDelegate, $rootScope, $state, $timeout, $ionicHistory, $window, pageViewed, $ionicPopup, $ionicLoading){
@@ -527,8 +759,6 @@ angular.module('controllers', [])
       }
       console.log(score);
 
-
-
       window.localStorage.score = score;
 
       Account.updateQuestions($scope.answers).then(function(){
@@ -650,17 +880,16 @@ angular.module('controllers', [])
 
   })
 .controller('StatsCtrl', function($scope, $document, $http, $q, $ionicLoading, $ionicPlatform, UserService, $ionicPopup, serverUrl, $ionicActionSheet, $ionicScrollDelegate, $state, Account, $window){
-  console.log('stats');
 
   var getFBfeed = function() {
     var q = $q.defer();
     $ionicLoading.show({
       template: 'Retrieving facebook data...'
     });
-    facebookConnectPlugin.api('/me/feed?fields=likes,shares,comments,message,link,place,picture&access_token=' + fbUserObj.authResponse.accessToken+'&limit=200', null,
+    facebookConnectPlugin.api('/me/feed?fields=likes.limit(1).summary(true),shares,created_time,comments.limit(1).summary(true),message,link,place,picture&access_token=' + fbUserObj.authResponse.accessToken+'&limit=200', null,
       function (response) {
         console.log(response);
-        //setCommentsList(response);
+
         $ionicLoading.hide();
         fbFeed = response;
         window.localStorage.fbfeed = JSON.stringify(response);
@@ -716,6 +945,7 @@ angular.module('controllers', [])
 
 
   var fbUserObj = UserService.getUser('facebook');
+  console.log(fbUserObj.picture);
 
   $scope.tabClick = function(filter){
     console.log(filter)
@@ -747,7 +977,7 @@ angular.module('controllers', [])
      return num.likes !== undefined;
    });
    likeList = _(likeList).chain().sortBy(function(x) {
-      return x.likes.data.length;
+      return x.likes.summary.total_count;
     }).value().reverse();
     likeList  = likeList.slice(0,10);
     $scope.likeList = likeList;
@@ -755,14 +985,12 @@ angular.module('controllers', [])
     $scope.filterType = 'Likes';
   };
 
-
-
   var setCommentsList = function(data){
     var likeList = _.filter(data.data, function(num){
-      return num.comments !== undefined;
+      return num.comments.summary.total_count !== undefined;
     });
     likeList = _(likeList).chain().sortBy(function(x) {
-      return x.comments.data.length;
+      return x.comments.summary.total_count;
     }).value().reverse();
     likeList  = likeList.slice(0,10);
 
@@ -786,14 +1014,15 @@ angular.module('controllers', [])
     $scope.filterType = 'Shares';
   };
 
-
   $ionicPlatform.ready(function() {
+    $scope.fbProfilePic = fbUserObj.picture;
     if(window.localStorage.fbfeed!==undefined){
       console.log('feed stored');
       fbFeed = JSON.parse(window.localStorage.fbfeed);
-      console.log(fbFeed);
+      console.log(JSON.stringify(fbFeed));
       setLikesList(fbFeed);
     }else{
+
       console.log('feed not stored grab');
       getFBfeed(fbUserObj.authResponse.accessToken).then(function(){
         console.log('start list');
@@ -829,10 +1058,631 @@ angular.module('controllers', [])
  */
 })
 
+  .controller('FriendStatsCtrl', function($scope, $document, $http, $q, $ionicLoading, $ionicPlatform, UserService, $ionicPopup, serverUrl, $ionicActionSheet, $ionicScrollDelegate, $state, Account, $window){
+    console.log('friends stats');
 
-.controller('HomeCtrl', function($scope, pageViewed, $http, $q, $timeout, $ionicPlatform, UserService, serverUrl, $ionicPopup, $ionicActionSheet, $state, Account, $ionicLoading, ionicMaterialMotion, ionicMaterialInk){
+    var getFBfeed = function() {
+      var q = $q.defer();
+      $ionicLoading.show({
+        template: 'Retrieving facebook data...'
+      });
+      facebookConnectPlugin.api('/me/photos?fields=likes.limit(1).summary(true),created_time,from,shares,comments.limit(1).summary(true),message,link,place,picture&access_token=' + fbUserObj.authResponse.accessToken+'&limit=200', null,
+        function (response) {
+          console.log(response);
+          //setCommentsList(response);
+          $ionicLoading.hide();
+          fbFeed = response;
+          window.localStorage.fbfeedfriends = JSON.stringify(response);
+          return q.resolve();
+        });
+      return q.promise;
+    };
+
+    var fbFeed;
+
+    $scope.sidepopupList = function(item){
+      console.log($scope.likeList[item]);
+
+      // Show the action sheet
+      var showActionSheet = $ionicActionSheet.show({
+        buttons: [
+          {
+            text: 'Share this post',
+            type: 'button-block button-positive',
+            onTap: function(e) {
+              console.log(e);
+            }
+          },
+          {
+            text: 'View post',
+            type: 'button-block button-positive',
+            onTap: function(e) {
+              console.log(e);
+            }
+          }
+        ],
+        titleText: '<img class="popUp-image" src="'+$scope.likeList[item].picture+'"> <br><strong>Posted by: </strong>'+$scope.likeList[item].from.name+'<br><strong>Date: </strong>'+$scope.likeList[item].created_time,
+        cancelText: 'Cancel',
+
+        cancel: function() {
+          // add cancel code...
+        },
+
+        buttonClicked: function(index) {
+          if(index === 0) {
+            // add edit 1 code
+          }
+
+          if(index === 1) {
+            // add edit 2 code
+          }
+        },
+
+        destructiveButtonClicked: function() {
+          // add delete code..
+        }
+      });
+    };
+
+
+    var fbUserObj = UserService.getUser('facebook');
+
+    $scope.tabClick = function(filter){
+      console.log(filter)
+      $scope.tabItem = filter;
+      if(filter=='a'){
+        setLikesList(fbFeed);
+        $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $ionicScrollDelegate.resize();
+        $ionicScrollDelegate.scrollTop();
+      }else if(filter=='b'){
+        setCommentsList(fbFeed);
+        $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $ionicScrollDelegate.resize();
+        $ionicScrollDelegate.scrollTop();
+      }else if(filter=='c'){
+        setShareList(fbFeed);
+        $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $ionicScrollDelegate.resize();
+        $ionicScrollDelegate.scrollTop();
+      }
+    };
+
+    var setLikesList = function(data){
+      $scope.tabItem = 'a';
+      var likeList = _.filter(data.data, function(num){
+        return num.likes !== undefined;
+      });
+      likeList = _(likeList).chain().sortBy(function(x) {
+        return x.likes.summary.total_count;
+      }).value().reverse();
+      likeList  = likeList.slice(0,10);
+      $scope.likeList = likeList;
+      $scope.iconClass = 'ion-thumbsup';
+      $scope.filterType = 'Likes';
+    };
+
+
+
+    var setCommentsList = function(data){
+      var likeList = _.filter(data.data, function(num){
+        return num.comments !== undefined;
+      });
+      likeList = _(likeList).chain().sortBy(function(x) {
+        return x.comments.summary.total_count;
+      }).value().reverse();
+      likeList  = likeList.slice(0,10);
+
+      $scope.likeList = likeList;
+      $scope.iconClass = 'ion-chatboxes';
+      $scope.filterType = 'Comments';
+    };
+
+    var setShareList = function(data){
+      console.log(data);
+      var likeList = _.filter(data.data, function(num){
+        return num.shares !== undefined;
+      });
+      likeList = _(likeList).chain().sortBy(function(x) {
+        return x.shares.count;
+      }).value().reverse();
+      likeList  = likeList.slice(0,10);
+
+      $scope.likeList = likeList;
+      $scope.iconClass = 'ion-android-share-alt';
+      $scope.filterType = 'Shares';
+    };
+
+
+    $ionicPlatform.ready(function() {
+      if(window.localStorage.fbfeedfriends!==undefined){
+        console.log('feed stored');
+        fbFeed = JSON.parse(window.localStorage.fbfeedfriends);
+
+        setLikesList(fbFeed);
+      }else{
+        console.log('feed not stored grab');
+        getFBfeed(fbUserObj.authResponse.accessToken).then(function(){
+          console.log(JSON.stringify(fbFeed));
+          setLikesList(fbFeed);
+        });
+      }
+    });
+
+    /* console.log('Parse Big Object');
+     console.log(window.localStorage.postStatsObj);
+     var postStatsObj = JSON.parse(window.localStorage.postStatsObj);
+
+     $scope.sendlikestoProfile = function(){
+     Account.updateLikes(postStatsObj).then(function(){
+     $state.go('app.msganalysis');
+     });
+     };
+
+
+     if(window.localStorage.catitems!==undefined) {
+     var catItems = JSON.parse(window.localStorage.catitems);
+     $scope.catitems = catItems;
+     }
+
+     if(window.localStorage.genreObj!==undefined){
+     var genreObj = JSON.parse(window.localStorage.genreObj);
+     $scope.genreObj = genreObj;
+     }
+
+     var statsObj = JSON.parse(window.localStorage.stats);
+     $scope.labels = statsObj.labels;
+     $scope.data = statsObj.data;
+     */
+  })
+
+  .controller('thrdPartyStatsCtrl', function($scope, $document, $http, $q, $ionicLoading, $ionicPlatform, UserService, $ionicPopup, serverUrl, $ionicActionSheet, $ionicScrollDelegate, $state, Account, $window){
+    console.log('Your applications stats');
+
+    var getFBfeed = function() {
+      var q = $q.defer();
+      $ionicLoading.show({
+        template: 'Retrieving facebook data...'
+      });
+      facebookConnectPlugin.api('/me/events/?fields=picture,start_time,name,rsvp_status,attending.limit(1).summary(true)&access_token=' + fbUserObj.authResponse.accessToken+'', null,
+        function (response) {
+          console.log('events');
+          console.log(response);
+          //setCommentsList(response);
+
+          fbFeed = response;
+          window.localStorage.fbfeedEvents = JSON.stringify(response);
+          getFBignored().then(function(){
+            $ionicLoading.hide();
+            return q.resolve();
+          });
+        });
+      return q.promise;
+    };
+
+    var getFBignored = function(){
+      var q = $q.defer();
+      facebookConnectPlugin.api('/me/events/not_replied/?fields=picture,start_time,name,rsvp_status,attending.limit(1).summary(true)&access_token=' + fbUserObj.authResponse.accessToken+'', null,
+        function (response) {
+          console.log('ignoreSTuff');
+          console.log(response);
+          //setCommentsList(response);
+         //$ionicLoading.hide();
+          fbFeedIgnore = response;
+          window.localStorage.fbfeedIgnoreEvents = JSON.stringify(response);
+          return q.resolve();
+        });
+      return q.promise;
+    };
+
+    var fbFeed,fbFeedIgnore;
+
+    $scope.sidepopupList = function(item){
+      console.log($scope.likeList[item]);
+
+      // Show the action sheet
+      var showActionSheet = $ionicActionSheet.show({
+        buttons: [
+          {
+            text: 'Share this post',
+            type: 'button-block button-positive',
+            onTap: function(e) {
+              console.log(e);
+            }
+          },
+          {
+            text: 'View post',
+            type: 'button-block button-positive',
+            onTap: function(e) {
+              console.log(e);
+            }
+          }
+        ],
+        titleText: '<img class="popUp-image" src="'+$scope.likeList[item].picture+'"> <br><strong>Posted by: </strong>'+$scope.likeList[item].from.name+'<br><strong>Date: </strong>'+$scope.likeList[item].created_time,
+        cancelText: 'Cancel',
+
+        cancel: function() {
+          // add cancel code...
+        },
+
+        buttonClicked: function(index) {
+          if(index === 0) {
+            // add edit 1 code
+          }
+
+          if(index === 1) {
+            // add edit 2 code
+          }
+        },
+
+        destructiveButtonClicked: function() {
+          // add delete code..
+        }
+      });
+    };
+
+
+    var fbUserObj = UserService.getUser('facebook');
+
+    $scope.tabClick = function(filter){
+      console.log(filter);
+      $scope.tabItem = filter;
+      if(filter=='a'){
+        setAttendList(fbFeed);
+        $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $ionicScrollDelegate.resize();
+        $ionicScrollDelegate.scrollTop();
+      }else if(filter=='b'){
+        setNonAttendList(fbFeedIgnore);
+        $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $ionicScrollDelegate.resize();
+        $ionicScrollDelegate.scrollTop();
+      }else if(filter=='c'){
+        setUnsureList(fbFeed);
+        $document[0].body.querySelector('div#sendSerachTermUp').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $document[0].body.querySelector('ion-content.grey-background.statistics-page').style[ionic.CSS.TRANSFORM] = 'translate3d(0, 0px, 0)';
+        $ionicScrollDelegate.resize();
+        $ionicScrollDelegate.scrollTop();
+      }
+    };
+
+    var setAttendList = function(data){
+      $scope.tabItem = 'a';
+      var likeList = _.filter(data.data, function(num){
+        return num.rsvp_status == 'attending';
+      });
+      /*likeList = _(likeList).chain().sortBy(function(x) {
+        return x.likes.summary.total_count;
+      }).value().reverse();
+      likeList  = likeList.slice(0,10);*/
+      $scope.likeList = likeList;
+      $scope.iconClass = 'ion-thumbsup';
+      $scope.filterType = 'Attended/Attending';
+    };
+
+
+
+    var setNonAttendList = function(data){
+
+      /*likeList = _(likeList).chain().sortBy(function(x) {
+       return x.likes.summary.total_count;
+       }).value().reverse();
+       likeList  = likeList.slice(0,10);*/
+      $scope.likeList = data.data;
+      $scope.iconClass = 'ion-thumbsup';
+      $scope.filterType = 'Ignored';
+    };
+
+
+    var setUnsureList = function(data){
+      var likeList = _.filter(data.data, function(num){
+        return num.rsvp_status == 'unsure';
+      });
+      /*likeList = _(likeList).chain().sortBy(function(x) {
+       return x.likes.summary.total_count;
+       }).value().reverse();
+       likeList  = likeList.slice(0,10);*/
+      $scope.likeList = likeList;
+      $scope.iconClass = 'ion-thumbsup';
+      $scope.filterType = 'Replyed Unsure';
+    };
+
+
+    $ionicPlatform.ready(function() {
+      if(window.localStorage.fbfeedEvents!==undefined && window.localStorage.fbfeedIgnoreEvents!==undefined){
+        console.log('feed stored');
+        fbFeed = JSON.parse(window.localStorage.fbfeedEvents);
+        fbFeedIgnore = JSON.parse(window.localStorage.fbfeedIgnoreEvents);
+        console.log(JSON.stringify(fbFeed));
+        setAttendList(fbFeed);
+      }else{
+        console.log('feed not stored grab');
+        getFBfeed(fbUserObj.authResponse.accessToken).then(function(){
+          console.log('start list');
+          setAttendList(fbFeed);
+        });
+      }
+    });
+
+
+    /* console.log('Parse Big Object');
+     console.log(window.localStorage.postStatsObj);
+     var postStatsObj = JSON.parse(window.localStorage.postStatsObj);
+
+     $scope.sendlikestoProfile = function(){
+     Account.updateLikes(postStatsObj).then(function(){
+     $state.go('app.msganalysis');
+     });
+     };
+
+
+     if(window.localStorage.catitems!==undefined) {
+     var catItems = JSON.parse(window.localStorage.catitems);
+     $scope.catitems = catItems;
+     }
+
+     if(window.localStorage.genreObj!==undefined){
+     var genreObj = JSON.parse(window.localStorage.genreObj);
+     $scope.genreObj = genreObj;
+     }
+
+     var statsObj = JSON.parse(window.localStorage.stats);
+     $scope.labels = statsObj.labels;
+     $scope.data = statsObj.data;
+     */
+  })
+
+  .controller('FootprintCtrl', function($scope, Account, $http, $q, pageViewed, UserService, $ionicLoading, $ionicPopup, $ionicScrollDelegate, $state){
+
+    var questionsAnswered = false;
+    $scope.answers = {};
+    //$scope.ngFootprintIncludeUrl = 'views/questions-footprint.html';
+
+    $scope.questionmaster = [
+      {
+        title: 'The BigFoot application has made me more aware of my Social Media behavior.',
+        model: 'question1',
+        items: {
+          'Strongly Disagree': 1,
+          'Disagree': 2,
+          'Neutral': 3,
+          'Agree': 4,
+          'Strongly Agree': 5
+        }
+      },
+      {
+        title: 'How often do you share private information, such as photos of friends and family on Social Media sites?',
+        model: 'question2',
+        items: {
+          'I never share private information': 1,
+          'No more than once a month': 2,
+          'No more than once a week': 3,
+          'I am not sure': 4,
+          'Every day': 5
+        }
+      },
+      {
+        title: 'How often do you review and manage your privacy settings of your Social Media accounts?',
+        model: 'question3',
+        items: {
+          'Every time I am informed about a change': 1,
+          'At least once every 3 months': 2,
+          'At least once every 6 months': 3,
+          'I am not sure': 4,
+          'Never': 5
+        }
+      },
+      {
+        title: 'How often do you use your Social Media credentials to sign into third-party applications?',
+        model: 'question4',
+        items: {
+          'Never': 1,
+          'At least once a month': 2,
+          'At lease once a week': 3,
+          'I am not sure': 4,
+          'Every day': 5
+        }
+      },
+      {
+        title: "When using my Social Media credentials to sign into other applications, I don't pay attention to what information the third-party app gets access to.",
+        model: 'question5',
+        items: {
+          'Strongly Disagree': 1,
+          'Disagree': 2,
+          'Neutral': 3,
+          'Agree': 4,
+          'Strongly Agree': 5
+        }
+      },
+      {
+        title: 'How many third-party app connections do you think you have?',
+        model: 'question6',
+        items: {
+          '0': 1,
+          '1-5': 2,
+          '6-10': 3,
+          '11-20': 4,
+          'More than 20': 5
+        }
+      },
+      {
+        title: 'I am not concerned about what happens with my Social Media data.',
+        model: 'question7',
+        items: {
+          'Strongly Disagree': 1,
+          'Disagree': 2,
+          'Neutral': 3,
+          'Agree': 4,
+          'Strongly Agree': 5
+        }
+      },
+      {
+        title: 'I always read and understand the Terms and Conditions when registering for a Social Media website.',
+        model: 'question8',
+        items: {
+          'Strongly Disagree': 5,
+          'Disagree': 4,
+          'Neutral': 3,
+          'Agree': 2,
+          'Strongly Agree': 1
+        }
+      },
+      {
+        title: "I don't mind that most Social Media sites use my data to sell advertisement.",
+        model: 'question9',
+        items: {
+          'Strongly Disagree': 1,
+          'Disagree': 2,
+          'Neutral': 3,
+          'Agree': 4,
+          'Strongly Agree': 5
+        }
+      },
+      {
+        title: 'I would rather pay Social Media sites a subscription fee in exchange for controlling what happens with my data.',
+        model: 'question10',
+        items: {
+          'Strongly Disagree': 5,
+          'Disagree': 4,
+          'Neutral': 3,
+          'Agree': 2,
+          'Strongly Agree': 1
+        }
+      },
+      {
+        title: 'I would like to be able to sell my Social Media data to private organizations such as Advertising and Marketing agencies.',
+        model: 'question11',
+        items: {
+          'Strongly Disagree': 1,
+          'Disagree': 2,
+          'Neutral': 3,
+          'Agree': 4,
+          'Strongly Agree': 5
+        }
+      },
+      {
+        title: 'For what price would you sell all your Social Media data?',
+        model: 'question12',
+        items: {
+          'I would not sell': 5,
+          'No more than €10': 4,
+          'No more than €100': 3,
+          'No more than €500': 2,
+          'More than €500': 1
+
+        }
+      }];
+
+    $scope.answers.question1 = 3;
+    $scope.answers.question2 = 3;
+    $scope.answers.question3 = 3;
+    $scope.answers.question4 = 3;
+    $scope.answers.question5 = 3;
+    $scope.answers.question6 = 3;
+    $scope.answers.question7 = 3;
+    $scope.answers.question8 = 3;
+    $scope.answers.question9 = 3;
+    $scope.answers.question10 = 3;
+    $scope.answers.question11 = 3;
+    $scope.answers.question12 = 3;
+
+    $scope.tabClick = function(filter){
+      console.log(filter);
+      $scope.tabItem = filter;
+      if(filter=='a'){
+        $scope.ngFootprintIncludeUrl = 'views/questions-footprint.html';
+        $ionicScrollDelegate.resize();
+        $ionicScrollDelegate.scrollTop();
+      }else if(filter=='b'){
+        if(questionsAnswered){
+          $scope.ngFootprintIncludeUrl = 'views/analysis-footprint.html';
+          $ionicScrollDelegate.resize();
+          $ionicScrollDelegate.scrollTop();
+        }else{
+          var alertPopup = $ionicPopup.alert({
+            title: 'Information',
+            template: 'You must anwser each question.'
+          });
+        }
+
+      }else if(filter=='c'){
+        if(questionsAnswered) {
+          $scope.ngFootprintIncludeUrl = 'views/recommend-footprint.html';
+          $ionicScrollDelegate.resize();
+          $ionicScrollDelegate.scrollTop();
+        }else{
+          var alertPopup = $ionicPopup.alert({
+            title: 'Information',
+            template: 'You must anwser each question.'
+          });
+        }
+      }
+    };
+
+    Account.getQuestions().then(function(data){
+      $ionicLoading.hide();
+      if(Object.getOwnPropertyNames(data.data).length > 0){
+        $scope.answers = data.data;
+        questionsAnswered = true;
+        console.log('answersed');
+        $scope.ngFootprintIncludeUrl = 'views/analysis-footprint.html';
+      }else{
+        console.log('hide answers');
+        $scope.ngFootprintIncludeUrl = 'views/analysis-footprint.html';
+      }
+    });
+
+    var showquestions = function(){
+      $ionicLoading.show({
+        template: 'retrieving user data...'
+      });
+
+    };
+
+
+
+
+
+    //On click of button ant the end
+    $scope.sendQuestionstoProfile = function(){
+      var score = 0;
+      $ionicLoading.show({
+        template: 'Updating...'
+      });
+      for(key in $scope.answers) {
+        console.log($scope.answers[key]);
+        score += parseInt($scope.answers[key]);
+      }
+      window.localStorage.score = score;
+      Account.updateQuestions($scope.answers).then(function(){
+        pageViewed.questions = 1;
+        $ionicLoading.hide();
+        questionsAnswered = true;
+        $scope.ngFootprintIncludeUrl = 'views/analysis-footprint.html';
+      });
+    };
+
+
+  })
+
+  .controller('HomeCtrl', function($scope, QuestionObjects, pageViewed, $http, $q, $timeout, $ionicPlatform, UserService, serverUrl, $ionicPopup, $ionicActionSheet, $state, Account, $ionicLoading, ionicMaterialMotion, ionicMaterialInk){
 	//This gets user data from local storage depreceated as data is now retrived from remote server **MF**
   //$scope.user = UserService.getUser();
+  //  $scope.answers = {};
+    if(window.localStorage.headerAuth!==undefined && window.localStorage.headerAuth !== '') {
+      console.log('logged in');
+      //user is logged in, send them to dashboard
+      $http.defaults.headers.common['Authorization'] = window.localStorage.headerAuth;
+      //Later check if questions
+      console.log($http.defaults.headers.common['Authorization']);
+
+    }
+  $scope.questionsSet = QuestionObjects;
   $ionicLoading.hide();
   $ionicLoading.show({
     template: 'retrieving user data...'
@@ -847,9 +1697,19 @@ angular.module('controllers', [])
     Account.getProfile()
       .then(function(response) {
         $scope.user = response.data;
-        $ionicLoading.hide();
+        Account.getQuestions().then(function(data){
+          $ionicLoading.hide();
+          if(Object.getOwnPropertyNames(data.data).length > 0){
+            $scope.answers = data.data;
+            console.log(data.data);
+            console.log($scope.answers);
+            console.log('answersed');
 
-
+          }else{
+            console.log('hide answers');
+          }
+        });
+        //$ionicLoading.hide();
 
       })
       .catch(function(response) {
@@ -876,6 +1736,19 @@ angular.module('controllers', [])
   };
 
 
+
+
+    var sendQuestionstoProfile = function(){
+      $ionicLoading.show({
+        template: 'Updating...'
+      });
+      window.localStorage.setupQuestions = JSON.stringify($scope.answers);
+
+      Account.updateQuestions($scope.answers).then(function(){
+        $ionicLoading.hide();
+      });
+    };
+
   console.log('changed to home');
   $scope.getProfile();
 
@@ -900,11 +1773,11 @@ angular.module('controllers', [])
         console.log(response);
         //Add to main OBJ
         postStatsObj.likes = response.data;
-        console.log(postStatsObj);
+
         parseFBlikeData(response.data);
       },
       function (response) {
-        console.log(JSON.stringify(response));
+       // console.log(JSON.stringify(response));
       }
     );
   };
@@ -913,7 +1786,7 @@ angular.module('controllers', [])
 
   var parseFBlikeData = function(likeData){
     console.log('parseing');
-    console.log(likeData);
+    console.log(JSON.stringify(likeData));
     //Parse amount of likes over time
     var timestamps = _(likeData).pluck('created_time');
     timestamps = _(timestamps).chain().groupBy(function(x) {
@@ -955,7 +1828,7 @@ angular.module('controllers', [])
 
    // $scope.catitems = categories;
     console.log('cat itesms:');
-    console.log(categories);
+   // console.log(categories);
     postStatsObj.categorys = categories;
     //Add Categories to obj
 
@@ -1001,13 +1874,13 @@ angular.module('controllers', [])
         genreObj.push({genre: v, value: i});
       });
 
-      console.log(genreObj);
+    //  console.log(genreObj);
 
       window.localStorage.genreObj = JSON.stringify(genreObj);
      // $scope.genreObj = genreObj;
       postStatsObj.music = genreObj;
 
-      console.log(postStatsObj);
+    //  console.log(postStatsObj);
       //Send all data to
       window.localStorage.postStatsObj = JSON.stringify(postStatsObj);
 
@@ -1018,14 +1891,58 @@ angular.module('controllers', [])
 
   };
 
+    var showSetupPopup = false;
+    var anserSetupObj = [];
+    var setupQuestion = function(i){
+      i++;
+      var template = 'question'+i+'.html';
+      console.log(template);
+      if(i<5){
+        setTimeout(function(){
+          showSetupFunction(template,i);
+        },90);
+      }else if(i==5){
+$state.go('app.footprint');
+      }
+    };
+    var showSetupFunction = function(templateUrl, i){
+      var popup = $ionicPopup.show({
+        templateUrl: templateUrl,
+        title: 'Setup Wizard',
+        scope: $scope,
+        buttons: [
+          {
+            text: '<b>Next</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              closebutton(i);
+            }
+          }
+        ]
+      });
 
+      var closebutton = function(i){
+        popup.close();
+        console.log($scope.choice);
+        anserSetupObj[i] = $scope.choice;
+        $scope.choice = '';
+        setupQuestion(i);
+      }
+    };
 
+  if(window.localStorage.setupComplete!==undefined){
+    showSetupPopup = true;
+  }
   $ionicPlatform.ready(function() {
     getFBlikes();
+    if(showSetupPopup){
+      showSetupFunction('question1.html',1);
+    }
   });
 
+
   // Set Motion **Wrap this around a listenter fro profile pic load**
-  console.log('motion started')
+
   $timeout(function() {
     ionicMaterialMotion.slideUp({
       selector: '.slide-up'

@@ -1,21 +1,21 @@
 <ion-view class="home-view">
   <button id="fab-profile" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-android-share-alt"></i></button>
   <ion-nav-title>
-    <strong>Your Activity</strong>
+    <strong>Your Friends Activity</strong>
   </ion-nav-title>
-    <div class="tabs tabs-positive tabs-icon-top tabs-sub-header">
+  <div class="tabs tabs-positive tabs-icon-top tabs-sub-header">
     <a class="tab-item" ng-class="{ 'active': tabItem === 'a' }" ng-click="tabClick('a')">
       <i class="icon ion-thumbsup"></i> By Likes
     </a>
     <a class="tab-item" ng-class="{ 'active': tabItem === 'b' }" ng-click="tabClick('b')">
       <i class="icon ion-chatboxes"></i> By Comments
-      </a>
-      <a class="tab-item" ng-class="{ 'active': tabItem === 'c' }" ng-click="tabClick('c')">
+    </a>
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'c' }" ng-click="tabClick('c')">
       <i class="icon ion-android-share-alt"></i> By Shares
     </a>
   </div>
   <div id="sendSerachTermUp" class="item item-divider top-locked-grey" ng-click="sendSerachTermUp()">
-    <span class="text-normal">Your most</span>  Popular Post <span class="text-normal"> by</span>  <strong>{{filterType}}</strong>
+    <span class="text-normal">Friends most </span>  Popular Post <span class="text-normal"> tagging you by</span>  <strong>{{filterType}}</strong>
     <span class="large-font-info right"><i class="icon ion-ios-close-empty"></i></span>
   </div>
 
@@ -28,9 +28,10 @@
       <div class="item item-text-wrap">
         <img ng-show="item.picture != null" class="left-float-post-img" src="{{item.picture}}">
         <img ng-hide="item.picture != null" class="left-float-post-img-profile" src="{{fbProfilePic}}">
-        <i class="icon float-right-avatar-small ion-android-more-vertical"></i>
-        <span ng-show="item.message != null">&ldquo;{{item.message}}&rdquo;<br></span>
-        <span ng-show="item.picture != null && item.message == null"><strong>You</strong> shared an image<br></span>
+
+          <i class="icon float-right-avatar-small ion-android-more-vertical"></i>
+          <span ng-show="item.message != null">&ldquo;{{item.message}}&rdquo;</span>
+         <span ng-show="item.picture != null && item.message == null"><strong>{{item.from.name}}</strong> Tagged you in an image<br></span>
         <span class="grey-text" ng-bind="item.created_time | date:'dd MMM yyyy'"></span>
         <span class="grey-text"> at </span>
         <span class="grey-text" ng-bind="item.created_time | date:'hh:mm'"></span>
@@ -42,7 +43,7 @@
 
         <div ng-show="tabItem === 'b'" class="card-footer stats">
           <span ng-show="item.comments != null"> <i class="icon ion-chatboxes"> {{item.comments.summary.total_count}} Comments </i></span>&nbsp;
-          <span ng-show="item.likes != null"><i class="icon muted ion-thumbsup"> {{item.likes.summary.total_count}} Likes &nbsp;</i></span>
+          <span ng-show="item.likes != null && item.likes > '0'"><i class="icon muted ion-thumbsup"> {{item.likes.summary.total_count}} Likes &nbsp;</i></span>
           <span ng-show="item.shares != null"> <i class="icon muted ion-android-share-alt"> {{item.shares.count}} Shares</i></span>
         </div>
 
@@ -57,8 +58,46 @@
 
     <div class="card" ng-show="!likeList.length">
       <div class="item item-text-wrap">
-        <i class="icon ion-alert-circled"></i> You have no posts matching this Criteria
+        <i class="icon ion-alert-circled"></i> There are no posts matching this Criteria
       </div>
     </div>
+
+
+    <!--  <div class="row">
+        <div class="col">
+
+
+          <div class="card">
+
+            <div class="item item-text-wrap">
+              <ion-list>
+                <ion-item >
+                   :  likes
+                </ion-item>
+              </ion-list>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="item item-divider">
+              Categories you like
+            </div>
+            <div class="item item-text-wrap">
+              <ion-list>
+                <ion-item ng-repeat="item in catitems">
+                  {{item.cat}} : {{item.count}} likes
+                </ion-item>
+              </ion-list>
+            </div>
+          </div>
+
+
+          <a class="button button-positive button-block " ng-click="sendlikestoProfile()">
+            Continue
+          </a>
+        </div>
+      </div>
+  -->
+
   </ion-content>
 </ion-view>

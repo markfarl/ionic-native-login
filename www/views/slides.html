@@ -1,0 +1,89 @@
+<ion-view class="slide-view">
+  <ion-slide-box on-slide-changed="slideHasChanged($index)">
+    <ion-slide>
+      <div class="slide-view">
+        <h1>Setup 1 of 4</h1>
+        <div class="card">
+          <div class="item item-text-wrap">
+
+            <div class="form-group slides" ng-repeat="question in questionsSet.questionSetOne">
+              <p>{{question.title}}</p>
+              <label class="item item-input item-select item-stable">
+                <select ng-change="slideCheckwhenIput('questionSetOne')" ng-model="answers[question.model]" ng-options="name for (name, value) in question.items">
+                    <option value="">Please select option</option>
+                  </select>
+                </label>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="slide-view">
+        <h1>Setup 2 of 4</h1>
+        <div class="card">
+          <div class="item item-text-wrap">
+
+            <div class="form-group slides" ng-repeat="question in questionsSet.questionSetTwo">
+              <p>{{question.title}}</p>
+              <label class="item item-input item-select item-stable">
+                <select ng-change="slideCheckwhenIput('questionSetTwo')" ng-model="answers[question.model]" ng-options="name for (name, value) in question.items">
+                  <option value="">Please select option</option>
+                </select>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </ion-slide>
+
+
+    <ion-slide>
+      <div class="slide-view">
+        <h1>Setup 3 of 4</h1>
+        <div class="card">
+          <div class="item item-text-wrap">
+            <div class="form-group slides">
+              <p>Posts I share:</p>
+              <ion-checkbox ng-repeat="question in questionsSet.questionSetThree" ng-model="answers[question.model]">{{question.title}}</ion-checkbox>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </ion-slide>
+
+    <ion-slide>
+      <div class="slide-view">
+        <h1>Setup 4 of 4</h1>
+        <div class="card">
+          <div class="item item-text-wrap">
+
+            <div class="form-group slides">
+              <p>{{questionsSet.questionSetFour.question}}</p>
+              <ion-checkbox ng-repeat="question in questionsSet.questionSetFour.data" ng-model="answers[question.model]">{{question.title}}</ion-checkbox>
+
+            </div>
+
+
+            <div class="form-group slides">
+              <p>{{questionsSet.questionSetFive.question}}</p>
+              <label class="item item-input item-select item-stable">
+                <select ng-change="question_11(answers.contactQuestion)" ng-model="answers.contactQuestion" ng-options="name for (name, value) in questionsSet.questionSetFive.answer">
+                  <option value="">Please select option</option>
+                </select>
+
+              </label>
+            </div>
+
+            <button ng-click="changeStateDashboard()" class="button button-positive button-full no-bottom-margin ink">CONTINUE</button>
+
+          </div>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slide-box>
+</ion-view>

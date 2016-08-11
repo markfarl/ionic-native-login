@@ -1,0 +1,29 @@
+<ion-view class="home-view">
+  <button id="fab-profile" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-android-share-alt"></i></button>
+  <ion-nav-title>
+    <strong>Digital Footprint Analysis</strong>
+  </ion-nav-title>
+  <div class="tabs tabs-positive tabs-icon-top tabs-sub-header">
+    <a class="tab-item" ng-class="{ 'active': ngFootprintIncludeUrl === 'views/questions-footprint.html' }" ng-click="tabClick('a')">
+      <i class="icon ion-help"></i> Questionare (required)
+    </a>
+    <a class="tab-item" ng-class="{ 'active': ngFootprintIncludeUrl === 'views/analysis-footprint.html' }" ng-click="tabClick('b')">
+      <i class="icon ion-ios-analytics-outline"></i> Footprint Analyisis
+    </a>
+    <a class="tab-item" ng-class="{ 'active': ngFootprintIncludeUrl === 'views/recommend-footprint.html' }" ng-click="tabClick('c')">
+      <i class="icon ion-information"></i> Recommendations
+    </a>
+  </div>
+  <div id="sendSerachTermUp" class="item item-divider top-locked-grey" ng-click="sendSerachTermUp()">
+    <span class="text-normal">Answer all questions for accurate analyisis</span>
+    <span class="large-font-info right"><i class="icon ion-ios-close-empty"></i></span>
+  </div>
+
+
+  <ion-content scroll-watch="88" scroll-event-interval="10" class="grey-background statistics-page">
+    <div ng-include src="ngFootprintIncludeUrl"></div>
+
+
+
+  </ion-content>
+</ion-view>

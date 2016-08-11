@@ -18,8 +18,8 @@
       <a ng-click="changeStateUrl('mydetails')" ng-class="{ 'active': ngIncludeUrlState === 'mydetails' }" class="tab-item">
         <i class="icon ion-person"></i> My Details
       </a>
-      <a ng-click="changeStateUrl('analytics')" ng-class="{ 'active': ngIncludeUrlState === 'analytics' }" class="tab-item">
-        <i class="icon ion-arrow-graph-up-right"></i> Analytics
+      <a ng-click="changeStateUrl('settings')" ng-class="{ 'active': ngIncludeUrlState === 'settings' }" class="tab-item">
+        <i class="icon ion-gear-b"></i> Settings
       </a>
       <a ng-click="showInformationPopup()" class="tab-item">
         <i class="icon ion-information-circled"></i> Information
@@ -27,7 +27,6 @@
     </div>
   </div>
   <ion-content profile-header-shrink scroll-watch="244" scroll-event-interval="10" class="grey-background profile-content" ng-class="{expanded:$scope.isExpanded}">
-
 
 
     <div ng-include src="ngIncludeUrl"></div>
@@ -41,3 +40,40 @@
 
   </ion-content>
 </ion-view>
+
+<script id="question1.html" type="text/ng-template">
+  <b>Please complete this one time setup</b>
+  <br>
+  <br>
+  <b>1/5:</b> Do you enjoy that sort of thing hey?<br><br>
+  <ion-radio ng-model="$parent.choice" ng-value="'yes'">Yes</ion-radio>
+  <ion-radio ng-model="$parent.choice" ng-value="'no'">No</ion-radio>
+</script>
+
+<script id="question2.html" type="text/ng-template">
+  <b>Please complete this one time setup</b>
+  <br>
+  <br>
+  <b>2/5:</b> Do you hate that sort of thing hey?<br><br>
+  <ion-radio ng-model="$parent.choice" ng-value="'yes'">Yes</ion-radio>
+  <ion-radio ng-model="$parent.choice" ng-value="'no'">No</ion-radio>
+</script>
+
+
+<script id="question3.html" type="text/ng-template">
+  <b>Please complete this one time setup</b>
+  <br>
+  <br>
+  <b>3/5:</b> Do you reject that sort of thing hey?<br><br>
+  <ion-radio ng-model="$parent.choice" ng-value="'yes'">Yes</ion-radio>
+  <ion-radio ng-model="$parent.choice" ng-value="'no'">No</ion-radio>
+</script>
+
+<script id="question4.html" type="text/ng-template">
+  <b>Please complete this one time setup</b>
+  <br>
+  <br>
+  <b>4/5:</b> Do you lust for that sort of thing hey?<br><br>
+  <ion-radio ng-model="$parent.choice" ng-value="'yes'">Yes</ion-radio>
+  <ion-radio ng-model="$parent.choice" ng-value="'no'">No</ion-radio>
+</script>

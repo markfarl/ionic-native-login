@@ -1,0 +1,53 @@
+<ion-view class="home-view">
+  <button id="fab-profile" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-android-share-alt"></i></button>
+  <ion-nav-title>
+    <strong>Events Activity</strong>
+  </ion-nav-title>
+  <div class="tabs tabs-positive tabs-icon-top tabs-sub-header">
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'a' }" ng-click="tabClick('a')">
+      <i class="icon ion-checkmark"></i> Attending
+    </a>
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'b' }" ng-click="tabClick('b')">
+      <i class="icon ion-close"></i> Not Attendeding
+    </a>
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'c' }" ng-click="tabClick('c')">
+      <i class="icon ion-minus"></i> Unsure
+    </a>
+  </div>
+  <div id="sendSerachTermUp" class="item item-divider top-locked-grey" ng-click="sendSerachTermUp()">
+    <span class="text-normal">Recent Events </span>  you <span class="text-normal">have </span> <strong>{{filterType}}</strong>
+    <span class="large-font-info right"><i class="icon ion-ios-close-empty"></i></span>
+  </div>
+
+
+  <ion-content scroll-watch="88" scroll-event-interval="10" class="grey-background statistics-page">
+
+    <div class="card" ng-click="sidepopupList($index)" ng-repeat="item in likeList">
+      <div class="item item-text-wrap">
+        <img ng-show="item.picture.data.url != null" class="left-float-post-img" src="{{item.picture.data.url}}">
+        <img ng-hide="item.picture != null" class="left-float-post-img-profile" src="{{fbProfilePic}}">
+
+        <i class="icon float-right-avatar-small ion-android-more-vertical"></i>
+        <span ng-show="item.name != null">{{item.name}}<br></span>
+        <span ng-show="item.place.name != null" class="grey-text"><strong>{{item.place.name}} - </strong></span>
+        <span class="grey-text" ng-bind="item.start_time | date:'dd MMM yyyy'"></span>
+        <span class="grey-text"> at </span>
+        <span class="grey-text" ng-bind="item.start_time | date:'hh:mm'"></span>
+        <div class="card-footer stats">
+          <span ng-show="item.attending != null"><i class="icon ion-checkmark"> {{item.attending.summary.count}} Attended </i></span>&nbsp;
+          <span ng-show="item.comments != null"> <i class="icon muted ion-chatboxes"> {{item.comments.summary.total_count}} Comments &nbsp;</i></span>
+          <span ng-show="item.shares != null"> <i class="icon muted ion-android-share-alt"> {{item.shares.count}} Shares</i></span>
+        </div>
+
+
+      </div>
+    </div>
+
+    <div class="card" ng-show="!likeList.length">
+      <div class="item item-text-wrap">
+        <i class="icon ion-alert-circled"></i> There are no posts matching this Criteria
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

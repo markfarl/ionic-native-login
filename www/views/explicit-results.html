@@ -1,0 +1,47 @@
+<ion-view class="home-view">
+  <button id="fab-profile" ng-click="nextPageDashboard()" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-arrow-right-b"></i></button>
+
+  <ion-nav-title>
+    <strong>BigFoot</strong> | Your Results
+  </ion-nav-title>
+  <ion-content class="grey-background results-padding">
+
+    <div class="card grid explicit">
+      <div class="icon-cirlce-wrapper dashboard score">
+        {{totalExplicit}}
+      </div>
+      <p class="black normal">Analysed Digital Footprint Size</p>
+    </div>
+    <div class="card grid second explicit">
+      <div class="explicit">
+        <canvas class="chart chart-doughnut" chart-data="cdata" chart-labels="clabels" chart-options="">
+        </canvas>
+      </div>
+
+      <p class="black">Analysed ({{totalExplicit}}) Vs Preferred ({{preferredScore}}) Footprint Size</p>
+    </div>
+
+    <div class="card">
+      <div class="item item-text-wrap">
+       Your <span class="biggerBold"> actual footprint</span> size based on anayisis of your facebook activity is <span class="score explicit">{{totalExplicit}}</span><br> <span ng-bind-html="sizeDiff"></span><span class="biggerBold"> preferred</span> footprint size of <span class="score">{{preferredScore}}</span>
+      </div>
+    </div>
+
+    <div class="card grid full-nom white" ng-click="changeState('app.results-monkey')">
+      <h2>Report</h2>
+      <p>Q1 Total Score: {{q1_score}}</p>
+      <p>Q2 Total Score: {{q2_score}}</p>
+      <p>Q3 Total Score: {{q3_score}}</p>
+      <p>Q4 Total Score: {{q4_score}}</p>
+      <p>Q5 Total Score: {{q5_score}}</p>
+      <p>Q6 Total Score: {{q6_score}}</p>
+      <p>Q7 Total Score: {{q7_score}}</p>
+      <p>Q8 Total Score: {{q8_score}}</p>
+      <p>Q9 Total Score: {{q9_score}}</p>
+      <p>Q10 Total Score: {{q10_score}}</p>
+      <p>Q11 Total Score: {{q11_score}}</p>
+
+    </div>
+
+  </ion-content>
+</ion-view>

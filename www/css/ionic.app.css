@@ -5471,7 +5471,7 @@ a.item-content {
     display: inline-block;
     margin: 0px 3px;
     width: 15px;
-    color: #000;
+    color: #fff;
     text-decoration: none;
     opacity: 0.3; }
     .slider-pager .slider-pager-page.active {
@@ -6606,6 +6606,11 @@ progress {
     margin-bottom: 10px; }
   .button.button-full.no-bottom-margin{
     margin-bottom: 0px; }
+.button.button-full.no-bottom-top-margin{
+  margin-bottom: 0px;
+margin-top: 0px;
+  background: #fff;
+}
   .button.button-light {
     border-color: #ddd;
     background-color: #fff;
@@ -7888,11 +7893,10 @@ div.dark-overlay{
   background: rgba(0,0,2,0.6);
 }
 i.float-right-avatar.icon{
+  position:relative;
+  top:15px;
   font-size:48px;
-  float:right;
-  padding: 10px;
-  margin-left: 10px;
-
+  margin:auto;
 }
 ion-content.profile-content{
   padding-top: 250px;
@@ -8017,6 +8021,14 @@ img.left-float-post-img{
   float: left;
   background: #eee;
   border: 1px solid #999;
+  margin: 0px 10px 10px 0px;
+}
+img.left-float-post-img-profile{
+  width:45px;
+  height: 45px;
+  float: left;
+  background: #eee;
+  border: 1px solid #999;
   margin: 0px 10px 20px 0px;
 }
 span.large-font-info {
@@ -8031,4 +8043,178 @@ span.large-font-info.right{
 }
 .item.item-input{
   background-color: #f8f8f8;
+}
+span.grey-text{
+  color:#666;
+  font-size: 12px;
+}
+.card-footer.stats{
+  width: 100%;
+  clear: both;
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+.card.card-button{
+  //background: #0b4a99;
+
+}
+.card.card-button .item.item-text-wrap{
+  //color:#fff;
+}
+div.icon-cirlce-wrapper{
+  float: left;
+  position: relative;
+  margin: 0px 10px 10px 0px;
+  background: #eee;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+}
+.slider {
+  height: 100%;
+}
+.slider-slide {
+  padding-top: 20px;
+  color: #000;
+  background: #0b4a99;
+  text-align: center;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+}
+div.slide-view h1{
+  margin-bottom: 20px;
+  color: #fff;
+}
+div.form-group.slides label.item{
+  height:40px;
+}
+div.form-group.slides {
+  margin-bottom: 20px;
+  text-align: left;
+}
+div.form-group.slides p{
+  color: #000;
+  margin-bottom: 5px;
+}
+div.card.grid{
+  display:inline-block;
+  width:50%;
+  margin:0px;
+  min-height:150px;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+}
+div.card.grid.full{
+  width:100%;
+  margin-top: 5px;
+}
+div.card.grid.full-nom{
+  width:100%;
+}
+div.card.grid.margintop{
+  margin-top: 5px;
+}
+div.card.grid.green{
+  background: #27566B;
+}
+div.card.grid.blue{
+  background: #226764;
+}
+div.card.grid.yellow{
+  background: #AA6B39;
+}
+div.card.grid.red{
+  background: #A8383B;
+}
+div.card.grid.white{
+  background: #fff;
+  color: #333;
+  font-weight: normal;
+}
+div.card.grid.second{
+  margin-right: -10px;
+}
+div.icon-cirlce-wrapper.dashboard{
+  float: none;
+  margin: auto;
+  margin-bottom: 15px;
+}
+div.icon-cirlce-wrapper.dashboard i{
+  color: #000;
+}
+h2.score, span.score{
+  position: absolute;
+  right:10px;
+  top:10px;
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  text-align: center;
+  height: 75px;
+  width:75px;
+  line-height: 72px;
+  margin-top: 0px;
+}
+span.score{
+  position: relative;
+  right:auto;
+  top:auto;
+  display:inline-block;
+  height:35px;
+  width:35px;
+  line-height: 34px;
+  margin: 0px 5px;
+  font-weight: bold;
+}
+span.score.explicit{
+  background: #97bbcd;
+  border: 1px solid #999;
+  color: #fff;
+}
+h2.score.lowerleft{
+  right:auto;
+  left:10px;
+  top:auto;
+  bottom:10px;
+}
+h2.score.explicit{
+  background: #97bbcd;
+  border: 1px solid #999;
+  color: #fff;
+}
+p.score{
+  position: absolute;
+  left:10px;
+  top:15px;
+  font-weight: bold;
+  font-size: 18px;
+}
+span.biggerBold{
+  font-weight: bold;
+  font-size: 18px;
+}
+div.icon-cirlce-wrapper.dashboard.score{
+  background: #97bbcd;
+  border: 1px solid #999;
+  color: #fff;
+  font-size: 34px;
+  line-height: 74px;
+}
+p.black{
+  color: #000;
+}
+p.black.normal{
+font-weight: normal;
+}
+div.explicit{
+  position: relative;
+  width:200px;
+  margin: auto;
+}
+div.card.grid.explicit{
+  min-height:180px;
 }
