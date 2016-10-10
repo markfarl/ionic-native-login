@@ -47,12 +47,13 @@
         <div class="card">
           <div class="item item-text-wrap">
             <div class="form-group slides">
-              <p>Posts I share:</p>
-              <ion-checkbox ng-repeat="question in questionsSet.questionSetThree" ng-model="answers[question.model]">{{question.title}}</ion-checkbox>
+              <p>{{questionsSet.questionSetThree.question}}</p>
+              <ion-checkbox ng-repeat="question in questionsSet.questionSetThree.data" ng-model="answers[question.model]">{{question.title}}</ion-checkbox>
             </div>
-
+            <button ng-click="slideThreeContinue()" class="button button-positive button-full no-bottom-margin ink">CONTINUE</button>
           </div>
         </div>
+
       </div>
     </ion-slide>
 

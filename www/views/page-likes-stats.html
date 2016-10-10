@@ -1,0 +1,47 @@
+<ion-view class="home-view">
+  <button id="fab-profile" ng-click="changeState('app.dashboard')" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-ios-grid-view"></i></button>
+  <ion-nav-title>
+    <strong>Page Likes</strong>
+  </ion-nav-title>
+  <div class="tabs tabs-positive tabs-icon-top tabs-sub-header">
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'a' }" ng-click="tabClick('a')">
+      <i class="icon ion-thumbsup"></i> Most Popular
+    </a>
+    <a class="tab-item" ng-class="{ 'active': tabItem === 'b' }" ng-click="tabClick('b')">
+      <i class="icon ion-ios-copy"></i> Category
+    </a>
+  </div>
+  <div id="sendSerachTermUp" class="item item-divider top-locked-grey" ng-click="sendSerachTermUp()">
+    <span class="text-normal">Pages you like sorted by </span> <strong>{{filterType}}</strong>
+    <span class="large-font-info right"><i class="icon ion-ios-close-empty"></i></span>
+  </div>
+
+  <ion-content scroll-watch="88" scroll-event-interval="10" class="grey-background statistics-page">
+    <div class="card" ng-repeat="item in likeList">
+      <div class="item item-text-wrap">
+
+        <i class="icon float-right-avatar-small ion-android-more-vertical"></i>
+        <span ng-show="item.name != null">{{item.name}}<br></span>
+        <span class="grey-text" >{{item.amount}} Pages</span>
+
+      </div>
+    </div>
+
+    <div class="card"  ng-repeat="item in likeListPop">
+      <div class="item item-text-wrap">
+        <img ng-show="item.picture.data.url != null" class="left-float-post-img" src="{{item.picture.data.url}}">
+        <img ng-hide="item.picture != null" class="left-float-post-img-profile" src="{{fbProfilePic}}">
+        <i class="icon float-right-avatar-small ion-android-more-vertical"></i>
+        <span ng-show="item.name != null">{{item.name}}<br></span>
+        <span class="grey-text" ><strong>{{item.likes}}</strong> Likes</span>
+      </div>
+    </div>
+
+    <div class="card" ng-show="!likeList.length&&!likeListPop.length">
+      <div class="item item-text-wrap">
+        <i class="icon ion-alert-circled"></i> There are no posts matching this Criteria
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

@@ -7,14 +7,18 @@ var standardAns = {
   'Daily': 4, //<48 Hrs
   'Weekly': 3, //<336 Hrs
   'Monthly': 2,//< 1440 Hrs
-  'Rarely': 1,//< 8760 Hrs
+  'Less than monthly': 1,//< 8760 Hrs
   'Never': 0// 8760 Hrs +
 };
 
 angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ionic-material', 'ionMdInput'])
 
 .constant('serverUrl', 'http://46.22.136.60:80')
-.constant('pageViewed' , {
+.constant('testerIDarry',[
+  10156550201005291,
+  10153443843601616
+])
+  .constant('pageViewed' , {
   stats: 0,
   messageAnal: 0,
   questions: 0
@@ -57,7 +61,7 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
       items: standardAns
     },
     {
-      title: 'How often are your posts images of yourself?',
+      title: 'How often do you tag your own images of yourself?',
       model: 'question2',
       items: standardAns
     },
@@ -108,11 +112,7 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
     question: "What type of public pages do you like?",
     data: [
     {
-      title: 'Photos of myself and friends',
-      model: 'sharedCheck_Photos'
-    },
-    {
-      title: 'Funny posts',
+      title: 'Entertainment posts',
       model: 'sharedCheck_Funny'
     },
     {
@@ -161,13 +161,14 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
         model: 'isChecked_Instagram'
       },
       {
-        title: 'Instagram',
-        model: 'isChecked_Instagram'
+        title: 'Other',
+        model: 'isChecked_Other'
       }
     ]
   },
   questionSetFive:{
     question: "I agree being contacted by a researcher to answer more questions and help this super cool research: ",
+    model: "contactQuestion",
     answer:
       {
         Yes:"1",
@@ -209,13 +210,17 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
       templateUrl: "views/slides.html",
       controller: 'SlidesCtrl'
     })
-
+    .state('results-monkey', {
+      url: "/results-monkey",
+      templateUrl: "views/results-monkey.html",
+      controller: 'ResultsMonkeyCtrl'
+    })
     .state('welcome.terms', {
       url: "/terms",
       cache : false,
       views: {
         'welcomeContent': {
-          templateUrl: "views/terms.html",
+          templateUrl: "views/terms.html"
 
         }
       }
@@ -285,6 +290,15 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
         }
       }
     })
+    .state('app.page-likes-stats', {
+      url: "/page-likes-stats",
+      views: {
+        'menuContent': {
+          templateUrl: "views/page-likes-stats.html",
+          controller: 'pageLikesStatsCtrl'
+        }
+      }
+    })
     .state('app.footprint', {
       url: "/footprint",
       views: {
@@ -314,15 +328,7 @@ angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ion
         }
       }
     })
-    .state('app.results-monkey', {
-      url: "/results-monkey",
-      views: {
-        'menuContent': {
-          templateUrl: "views/results-monkey.html",
-          controller: 'ResultsMonkeyCtrl'
-        }
-      }
-    })
+
     .state('app.explicit-results', {
       url: "/results-explicit",
       views: {

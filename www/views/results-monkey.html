@@ -1,14 +1,36 @@
 <ion-view class="home-view">
  <!-- <button id="fab-profile"  class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-arrow-right-b"></i></button> -->
 
-  <ion-nav-title>
-    <strong>BigFoot</strong> | Your Results
-  </ion-nav-title>
-    <ion-content class="grey-background results-padding">
+
+    <ion-content class="blue-background results-padding">
 
      <!-- <div class="card full-nom white" ng-click="changeState('app.app.results-monkey')">
 
       </div>-->
+
+      <div class="card report">
+        <div class="icon-cirlce-wrapper scorereport">
+          {{Iimpliict_score}}
+        </div>
+        <h2 class="report">Perceived Footprint Size:</h2>
+        <img class="result" src="img/{{imgsrc}}">
+        <div class="item item-text-wrap">
+
+          <div class="report-text">
+            <h3>{{bigfootType}}</h3>
+            <p>{{bigfootText}}</p>
+            <!--<p><span class="litebutton" ng-click="nextPageDashboard()">Anaylze and Compare my actual usage</span></p>-->
+          </div>
+          <button class="button button-block button-positive" ng-click="nextPageDashboard()">
+            Anaylze My Actual Usage
+          </button>
+        </div>
+
+      </div>
+
+
+
+<!--
       <div class="card minHeight">
 
         <p class="score">Your Digital Footprint Size:</p>
@@ -21,10 +43,10 @@
           <p>{{bigfootText}}</p>
 
         </div>
-        <a class="button button-positive button-block" ng-click="nextPageDashboard()">
-          Anaylze and Compare my actual usage
-        </a>
       </div>
-
+      <a class="button card button-positive button-block" ng-click="nextPageDashboard()">
+        Anaylze and Compare my actual usage
+      </a>
+-->
   </ion-content>
 </ion-view>

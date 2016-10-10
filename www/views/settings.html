@@ -2,11 +2,12 @@
 <div class="row">
   <div class="col">
 
+
+
   <div class="form-group slides" ng-repeat="question in questionsSet.questionSetOne">
     <p>{{question.title}}</p>
     <label class="item item-input item-select item-stable">
       <select ng-change="slideCheckwhenIput('questionSetOne')" ng-model="answers[question.model]" ng-options="name for (name, value) in question.items">
-        <option value="">Please select option</option>
       </select>
     </label>
   </div>
@@ -15,7 +16,6 @@
     <p>{{question.title}}</p>
     <label class="item item-input item-select item-stable">
       <select ng-change="slideCheckwhenIput('questionSetTwo')" ng-model="answers[question.model]" ng-options="name for (name, value) in question.items">
-        <option value="">Please select option</option>
       </select>
     </label>
   </div>
@@ -23,8 +23,8 @@
 
     <div class="form-group slides">
       <div class="form-group slides">
-        <p>Posts I share:</p>
-        <ion-checkbox ng-repeat="question in questionsSet.questionSetThree" ng-model="answers[question.model]">{{question.title}}</ion-checkbox>
+        <p>{{questionsSet.questionSetThree.question}}</p>
+        <ion-checkbox ng-repeat="question in questionsSet.questionSetThree.data" ng-model="answers[question.model]">{{question.title}}</ion-checkbox>
       </div>
     </div>
 
@@ -36,9 +36,23 @@
     </div>
 
 
-    <button class="button  button-block button-positive" ng-click="sendQuestionstoProfile()">
+    <div class="form-group slides">
+      <p>{{questionsSet.questionSetFive.question}}</p>
+      <label class="item item-input item-select item-stable">
+        <select ng-model="answers[questionsSet.questionSetFive.model]">
+          <option value="1">Yes</option>
+          <option value="3">No</option>
+        </select>
+      </label>
+    </div>
+
+
+
+    <button class="button button-block button-positive" ng-click="sendQuestionstoProfile()">
       Save Settings
     </button>
+
+
 
 </div>
   </div>

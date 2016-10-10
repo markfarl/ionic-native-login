@@ -12,31 +12,38 @@
   </ion-side-menu-content>
 
   <ion-side-menu side="right">
-    <ion-content>
+    <ion-header-bar class="dark-bg expanded">
+      <span class="avatar style" style="background: url({{userImageMenu}}); background-size: cover;"></span>
+      <h2 class="avatar style">{{userNameMenu}}</h2>
+    </ion-header-bar>
+    <ion-content class="stable-bg has-expanded-header">
       <ion-list>
-        <ion-item menu-close ng-click="changeState('app.home')">
+        <ion-item menu-close ng-click="changeState('app.dashboard')">
           Dashboard
         </ion-item>
-        <ion-item menu-close ng-click="changeState('app.home')">
-          Your Footprint
+        <ion-item menu-close ng-click="changeState('app.explicit-results')">
+          Your Footprint Results - Report
         </ion-item>
         <ion-item menu-close ng-click="changeState('app.home')">
-          Profile
+          Account
         </ion-item>
-        <ion-item ng-hide="pageViewed.stats == 0" menu-close ng-click="changeState('app.stats')">
-          Social Media Statistics
+        <ion-item  menu-close ng-click="changeState('app.stats')">
+          Your Posts
         </ion-item>
-        <ion-item ng-hide="pageViewed.messageAnal == 0" menu-close ng-click="changeState('app.msganalysis')">
-          Privacy Analysis
+        <ion-item menu-close ng-click="changeState('app.friends-stats')">
+          Tagged Posts
         </ion-item>
-        <ion-item ng-hide="pageViewed.messageAnal == 0" menu-close ng-click="changeState('app.questions')">
-          Your Usage
+        <ion-item menu-close ng-click="changeState('app.third-party-stats')">
+          Events
         </ion-item>
-        <ion-item ng-hide="pageViewed.questions == 0" menu-close ng-click="changeState('app.results')">
-          Results
+        <ion-item menu-close ng-click="changeState('app.page-likes-stats')">
+          Likes
         </ion-item>
         <ion-item menu-close ng-click="showLogOutMenu()">
           Log Out
+        </ion-item>
+        <ion-item menu-close ng-show=isTesterAcc ng-click="showLogOutMenu()">
+          RESET ACCOUNT
         </ion-item>
       </ion-list>
     </ion-content>

@@ -18,16 +18,35 @@ angular.module('services', [])
     setUser: setUser
   };
 })
-.factory('Account', function($http, serverUrl, $q, $ionicLoading) {
+.factory('Account', function($http, serverUrl, testerIDarry, $q, $ionicLoading) {
   return {
+    isTesterProfile: function(){
+      for(var i in testerIDarry) {
+        console.log(testerIDarry[i]);
+        if(testerIDarry[i]==window.localStorage.userID){
+          return true;
+        }else{
+          return false;
+        }
+      }
+    },
     getProfile: function() {
       return $http.get(serverUrl+'/api/me');
     },
     updateProfile: function(profileData) {
       return $http.put(serverUrl+'/api/me', profileData);
     },
+    getFeedback: function(){
+      return $http.get(serverUrl+'/api/me/feedback');
+    },
+    setFeedback: function(data){
+      return $http.put(serverUrl+'/api/me/feedback',{feedback: data});
+    },
     getQuestions: function(data){
       return $http.get(serverUrl+'/api/me/questions');
+    },
+    getExplicitQuestions: function(data){
+      return $http.get(serverUrl+'/api/me/explicitquestions');
     },
     getScore: function(data){
 
@@ -93,6 +112,7 @@ angular.module('services', [])
             function (response) {
               $ionicLoading.hide();
               var totalrespeonse = _(fullresponse).union(response.data);
+              totalrespeonse = _(totalrespeonse).sortBy('created_time');
               return q.resolve(totalrespeonse);
             });
         });
@@ -130,6 +150,9 @@ angular.module('services', [])
     updateQuestions: function(data){
       return $http.put(serverUrl+'/api/me/questions', {questions: data});
     },
+    updateExplicitQuestions: function(data){
+      return $http.put(serverUrl+'/api/me/explicitquestions', {explicitQuestions: data});
+    },
     updateLikes: function(data){
       return $http.put(serverUrl+'/api/me/likesdata', {likesdata: data});
     },
@@ -148,6 +171,64 @@ angular.module('services', [])
     }
   };
 })
+  .factory('Listings', function($http, serverUrl, $q, $ionicLoading) {
+    return{
+      createDetailsBox: function(data){
+        var html='';
+        html += '<div class="card-footer stats">';
+        if(data.comments.summary.total_count>0){
+          html += '<span><i class="icon ion-chatboxes">'+data.comments.summary.total_count+' Comments &nbsp;&nbsp; </i></span>';
+        }
+        if(data.likes.summary.total_count>0){
+          html += '<span><i class="icon ion-thumbsup">'+data.likes.summary.total_count+' Likes &nbsp; &nbsp;</i></span>';
+        }
+        if(data.shares!==undefined){
+          html += '<span><i class="icon ion-android-share-alt">'+data.shares.count+' Shares </i></span>';
+        }
+        html += '</div>';
+        return html;
+      },
+      createEventDetailsBox: function(data){
+        var html='';
+        html += '<div class="card-footer stats">';
+        if(data.attending.summary.count>0){
+          html += '<span><i class="icon ion-checkmark"> '+data.attending.summary.count+' Attending </i></span><br>';
+        }
+        if(data.declined.summary.count>0){
+          html += '<span><i class="icon ion-close"> '+data.declined.summary.count+' Declined </i></span><br>';
+        }
+        if(data.interested.summary.count>0){
+          html += '<span><i class="icon ion-minus-circled"> '+data.interested.summary.count+' Interested </i></span>';
+        }
+        html += '</div>';
+        return html;
+      },
+      checkMessage: function(data){
+        if(data==undefined){
+          return 'You shared an Image';
+        }else{
+          return ''+data+''
+        }
+      },
+      makedate: function(data){
+      var monthNames = [
+        "January", "February", "March",
+        "April", "May", "June", "July",
+        "August", "September", "October",
+        "November", "December"
+      ];
+
+      var date = new Date(data);
+      var day = date.getDate();
+      var monthIndex = date.getMonth();
+      var year = date.getFullYear();
+      var time = date.getHours();
+      var mins = date.getMinutes();
+
+      return day + ' ' + monthNames[monthIndex] + ' ' + year+' at '+time+':'+mins;
+    }
+    }
+  })
   .factory('Score', function($http, serverUrl, $q, $ionicLoading) {
     var getUSerAverageandTimeObject = function(data,type){
       if(type==null){
@@ -211,13 +292,10 @@ angular.module('services', [])
       },
 
       getQuestion2: function (data) {
-        console.log(data);
-        var list =  _(data).filter(function(obj){
-          if(obj.picture!==undefined&&obj.with_tags!==undefined){
-            for(var i in obj.with_tags.data) {
-              if(obj.with_tags.data[i].id == window.localStorage.userID){
-                return true;
-              }
+        var list =  _(data).filter(function(obj) {
+          if (obj.from !== undefined) {
+            if (obj.from.id == window.localStorage.userID && obj.picture!==undefined) {
+              return true;
             }
           }
         });
@@ -254,11 +332,19 @@ angular.module('services', [])
 
       getQuestion7: function (data) {
         var list =  _(data).filter(function(obj){
-          if(obj.with_tags!==undefined){
-            for(var i in obj.with_tags.data) {
-              if(obj.with_tags.data[i].id == window.localStorage.userID){
-                return true;
-              }
+          if(obj.from!==undefined){
+            console.log(obj.from.id);
+            /*if(obj.with_tags!==undefined){
+             for(var i in obj.with_tags.data) {
+             console.log(obj.with_tags.data[i].id);
+             console.log(window.localStorage.userID);
+             if(obj.with_tags.data[i].id == window.localStorage.userID){
+             return true;
+             }
+             }
+             }OLD WAY FB DOESNT SEND YOUR PSOT TAGS EVEN IF THE ARE*/
+            if(obj.from.id==window.localStorage.userID){
+              return true;
             }
           }
         });

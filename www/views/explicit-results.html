@@ -2,45 +2,92 @@
   <button id="fab-profile" ng-click="nextPageDashboard()" class="hideScrollBtn button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-arrow-right-b"></i></button>
 
   <ion-nav-title>
-    <strong>BigFoot</strong> | Your Results
+    <strong>BigFoot</strong> | Results - Report
   </ion-nav-title>
   <ion-content class="grey-background results-padding">
 
     <div class="card grid explicit">
+
       <div class="icon-cirlce-wrapper dashboard score">
         {{totalExplicit}}
       </div>
-      <p class="black normal">Analysed Digital Footprint Size</p>
+      <p class="black">Your Actual Digital Footprint Size</p>
     </div>
     <div class="card grid second explicit">
+
+      <div class="icon-cirlce-wrapper dashboard score preferred">
+        {{preferredScore}}
+      </div>
+      <p class="black">Perceived Digital Footprint Size</p>
+    </div>
+    <div class="card grid full results">
       <div class="explicit">
         <canvas class="chart chart-doughnut" chart-data="cdata" chart-labels="clabels" chart-options="">
         </canvas>
       </div>
-
-      <p class="black">Analysed ({{totalExplicit}}) Vs Preferred ({{preferredScore}}) Footprint Size</p>
+      <div class="explicit">
+        Your <span class="biggerBold"> actual footprint</span> size is <span class="score explicit">{{totalExplicit}}</span><br> <span ng-bind-html="sizeDiff"></span><span class="biggerBold"> perceived</span> footprint size of <span class="score">{{preferredScore}}</span>
+      </div>
+  <!--    <p class="black">Analysed ({{totalExplicit}}) Vs Preferred ({{preferredScore}}) Footprint Size</p> -->
     </div>
 
-    <div class="card">
+    <div class="card full report">
+      <div class="icon-cirlce-wrapper report">
+        <i class="icon float-right-avatar ion-person"></i>
+      </div>
+      <h2 class="report">Your Posts</h2>
       <div class="item item-text-wrap">
-       Your <span class="biggerBold"> actual footprint</span> size based on anayisis of your facebook activity is <span class="score explicit">{{totalExplicit}}</span><br> <span ng-bind-html="sizeDiff"></span><span class="biggerBold"> preferred</span> footprint size of <span class="score">{{preferredScore}}</span>
+        <div class="report-text">
+          <p ng-bind-html="question1Summary"></p>
+          <p ng-bind-html="question2Summary"></p>
+          <p ng-bind-html="question3Summary"></p>
+          <p ng-bind-html="question4Summary"></p>
+          <p ng-bind-html="question5Summary"></p>
+          <p><span class="litebutton" ng-click="changeState('app.stats')">View Your Most Popular Posts</span></p>
+        </div>
       </div>
     </div>
 
-    <div class="card grid full-nom white" ng-click="changeState('app.results-monkey')">
-      <h2>Report</h2>
-      <p>Q1 Total Score: {{q1_score}}</p>
-      <p>Q2 Total Score: {{q2_score}}</p>
-      <p>Q3 Total Score: {{q3_score}}</p>
-      <p>Q4 Total Score: {{q4_score}}</p>
-      <p>Q5 Total Score: {{q5_score}}</p>
-      <p>Q6 Total Score: {{q6_score}}</p>
-      <p>Q7 Total Score: {{q7_score}}</p>
-      <p>Q8 Total Score: {{q8_score}}</p>
-      <p>Q9 Total Score: {{q9_score}}</p>
-      <p>Q10 Total Score: {{q10_score}}</p>
-      <p>Q11 Total Score: {{q11_score}}</p>
+    <div class="card report">
+      <div class="icon-cirlce-wrapper report">
+        <i class="icon float-right-avatar ion-person-stalker"></i>
+      </div>
+      <h2 class="report">Tagged Posts</h2>
+      <div class="item item-text-wrap">
+        <div class="report-text">
+          <p ng-bind-html="question6Summary"></p>
+          <p ng-bind-html="question7Summary"></p>
+          <p ng-bind-html="question8Summary"></p>
+          <p><span class="litebutton" ng-click="changeState('app.friends-stats')">View Your Most Popular Tagged Posts</span></p>
+        </div>
+      </div>
+    </div>
 
+    <div class="card">
+      <div class="icon-cirlce-wrapper report">
+        <i class="icon float-right-avatar ion-calendar"></i>
+      </div>
+      <h2 class="report">Event Posting</h2>
+      <div class="item item-text-wrap">
+        <div class="report-text">
+          <p ng-bind-html="question11Summary"></p>
+          <p><span class="litebutton" ng-click="changeState('app.third-party-stats')">View Your most popular Events</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="icon-cirlce-wrapper report">
+        <i class="icon float-right-avatar ion-thumbsup"></i>
+      </div>
+      <h2 class="report">Page Likes</h2>
+      <div class="item item-text-wrap">
+        <div class="report-text">
+          <p ng-bind-html="question9Summary"></p>
+          <p ng-bind-html="question10Summary"></p>
+
+          <p><span class="litebutton" ng-click="changeState('app.page-likes-stats')">View Your Page likes</span></p>
+        </div>
+      </div>
     </div>
 
   </ion-content>
