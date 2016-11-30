@@ -1094,8 +1094,7 @@ angular.module('controllers', [])
       });
     return q.promise;
   };
-
-
+  
 
   var fbFeed;
 
@@ -1317,7 +1316,7 @@ angular.module('controllers', [])
         button = [
           {
             text: 'View post',
-            type: 'button-block button-positive',
+            type: 'button-block button-positive'
           }
         ];
         titleText = '<img class="popUp-image" src="'+$scope.likeList[item].picture+'"> <span class="biggerBold">'+$scope.likeList[item].from.name+'</span> Tagged you<br>'+Listings.makedate($scope.likeList[item].created_time)+Listings.createDetailsBox($scope.likeList[item]);

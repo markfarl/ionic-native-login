@@ -13,11 +13,12 @@ var standardAns = {
 
 angular.module('starter', ['ionic', 'controllers', 'services',  'chart.js', 'ionic-material', 'ionMdInput'])
 
-.constant('serverUrl', 'http://46.22.136.60:80')
+.constant('serverUrl', 'http://bigfoot.adaptcentre.ie:81')
 .constant('testerIDarry',[
   10156550201005291,
   10153443843601616
 ])
+
   .constant('pageViewed' , {
   stats: 0,
   messageAnal: 0,
